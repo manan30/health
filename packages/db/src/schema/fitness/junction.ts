@@ -1,16 +1,16 @@
-import { integer, pgTable, primaryKey } from "drizzle-orm/pg-core";
-import { exerciseType } from "./exercise-type";
-import { muscleGroup } from "./muscle-group";
-import { relations } from "drizzle-orm";
-import { equipment } from "./equipment";
+import { integer, pgTable, primaryKey } from 'drizzle-orm/pg-core';
+import { exerciseType } from './exercise-type';
+import { muscleGroup } from './muscle-group';
+import { relations } from 'drizzle-orm';
+import { equipment } from './equipment';
 
 export const exerciseTypeToMuscleGroup = pgTable(
-  "exercise_type_to_muscle_group",
+  'exercise_type_to_muscle_group',
   {
-    exerciseTypeId: integer("exercise_type_id")
+    exerciseTypeId: integer('exercise_type_id')
       .notNull()
       .references(() => exerciseType.id),
-    muscleGroupId: integer("muscle_group_id")
+    muscleGroupId: integer('muscle_group_id')
       .notNull()
       .references(() => muscleGroup.id),
   },
@@ -34,12 +34,12 @@ export const exerciseTypeToMuscleGroupRelations = relations(
 );
 
 export const exerciseTypeToEquipment = pgTable(
-  "exercise_type_to_equipment",
+  'exercise_type_to_equipment',
   {
-    exerciseTypeId: integer("exercise_type_id")
+    exerciseTypeId: integer('exercise_type_id')
       .notNull()
       .references(() => exerciseType.id),
-    equipmentId: integer("equipment_id")
+    equipmentId: integer('equipment_id')
       .notNull()
       .references(() => equipment.id),
   },
