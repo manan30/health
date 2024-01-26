@@ -4,6 +4,9 @@
     "deploy": "wrangler deploy --minify src/index.ts"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^0.7.2",
+    "db": "workspace:*",
+    "drizzle-orm": "^0.29.3",
     "hono": "^3.12.7"
   },
   "devDependencies": {

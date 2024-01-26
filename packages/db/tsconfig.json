@@ -16,7 +16,8 @@
     "skipLibCheck": true,
     "strict": true,
     "downlevelIteration": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "module": "NodeNext"
   },
   "exclude": ["node_modules", "dist"]
 }
