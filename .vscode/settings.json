@@ -4,5 +4,12 @@
       "mode": "auto"
     }
   ],
-  "cSpell.words": ["Hono", "neondatabase", "nitropack"]
+  "cSpell.words": [
+    "Hono",
+    "isbot",
+    "neondatabase",
+    "nitropack",
+    "Pipeable",
+    "Quickstart"
+  ]
 }
