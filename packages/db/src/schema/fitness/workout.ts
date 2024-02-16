@@ -4,7 +4,7 @@ import { exercise } from './exercise';
 
 export const workout = pgTable('workout', {
   id: serial('id').primaryKey().notNull(),
-  name: text('name').notNull(),
+  name: text('name'),
   description: text('description'),
   date: timestamp('date', { precision: 3, mode: 'string' }).notNull(),
   createdAt: timestamp('created_at', { precision: 3, mode: 'string' })
