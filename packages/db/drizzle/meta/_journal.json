@@ -15,6 +15,13 @@
       "when": 1709785936468,
       "tag": "0001_magical_silver_centurion",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1709787108061,
+      "tag": "0002_unknown_random",
+      "breakpoints": true
     }
   ]
 }
