@@ -21,7 +21,7 @@ app.post("/new", async (c) => {
   const db = c.get("db");
   const schema = c.get("schema");
   const body = (await c.req.json()) as {
-    type: string;
+    name: string;
     date: string;
     exercises?: { name: string; sets: string[] }[];
   };
@@ -31,31 +31,31 @@ app.post("/new", async (c) => {
   const workout = await db
     .insert(schema.workout)
     .values({
-      name: body.type,
       date: body.date,
+      name: body.name,
     })
     .returning({ id: schema.workout.id });
 
-  const scrubbedExercises = body.exercises?.filter((exercise) => {
-    return (
-      !isEmptyString(exercise.name) &&
-      exercise.sets.some((set) => !isEmptyString(set))
-    );
-  });
+  // const scrubbedExercises = body.exercises?.filter((exercise) => {
+  //   return (
+  //     !isEmptyString(exercise.name) &&
+  //     exercise.sets.some((set) => !isEmptyString(set))
+  //   );
+  // });
 
-  if (scrubbedExercises?.length) {
-    await db.insert(schema.exercise).values(
-      scrubbedExercises.map((exercise) => {
-        return {
-          name: exercise.name,
-          sets: exercise.sets,
-          workoutId: workout[0].id,
-          date: body.date,
-          exerciseTypeId: 1,
-        };
-      })
-    );
-  }
+  // if (scrubbedExercises?.length) {
+  //   await db.insert(schema.exercise).values(
+  //     scrubbedExercises.map((exercise) => {
+  //       return {
+  //         name: exercise.name,
+  //         sets: exercise.sets,
+  //         workoutId: workout[0].id,
+  //         date: body.date,
+  //         exerciseTypeId: 1,
+  //       };
+  //     })
+  //   );
+  // }
 
   return c.json({ workoutId: workout[0].id });
 });

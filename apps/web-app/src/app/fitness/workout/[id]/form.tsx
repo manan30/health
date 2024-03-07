@@ -25,7 +25,6 @@ type WorkoutFormProps = {
 };
 
 const defaultWorkoutState: WorkoutInputs = {
-  type: "",
   date: new Date(),
   exercises: [
     {
@@ -64,7 +63,7 @@ export function WorkoutForm({ workout }: WorkoutFormProps) {
         })}
       >
         <div className="flex items-center gap-4">
-          <Input label="Type" {...register("type")} />
+          <Input label="Name" {...register("name")} />
           <Popover>
             <PopoverTrigger className="w-full" asChild>
               <div className="flex flex-col space-y-2 w-full">

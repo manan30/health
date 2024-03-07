@@ -1,5 +1,5 @@
 type WorkoutInputs = {
-  type?: string;
+  name?: string;
   date: Date;
   exercises: {
     name: string;

@@ -1,6 +1,7 @@
 import React from "react";
 import { WorkoutForm } from "./form";
 import { getWorkoutById } from "~/lib/data-fetching";
+import { Workout } from "~/types";
 
 const __NEW__ = "new";
 
@@ -13,7 +14,7 @@ export default async function NewWorkout({
 }: {
   params: { id: string };
 }) {
-  let workout = undefined;
+  let workout: Workout | undefined = undefined;
 
   if (params.id !== __NEW__) {
     workout = await getWorkout(params.id);
