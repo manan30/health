@@ -1,3 +1,3 @@
 # health
 
-My personal health and fitness tracker.
+My personal nutrition and fitness tracker.
