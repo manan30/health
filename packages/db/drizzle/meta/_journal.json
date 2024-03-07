@@ -22,6 +22,13 @@
       "when": 1709787108061,
       "tag": "0002_unknown_random",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1709787954968,
+      "tag": "0003_nasty_killmonger",
+      "breakpoints": true
     }
   ]
 }
