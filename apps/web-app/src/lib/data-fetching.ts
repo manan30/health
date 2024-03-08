@@ -1,8 +1,9 @@
 import { ofetch as fetch } from "ofetch";
+import { Ingredient } from "~/models/ingredient";
 import { Workout } from "~/types";
 
 const fetchInstance = fetch.create({
-  baseURL: "http://localhost:8787",
+  baseURL: "http://localhost:8787/v1",
   headers: {
     "Content-Type": "application/json",
   },
@@ -20,5 +21,5 @@ export async function getWorkoutById(id: string) {
 }
 
 export async function getIngredients() {
-  return fetchInstance<string[]>("/ingredients");
+  return fetchInstance<Ingredient[]>("/ingredients");
 }

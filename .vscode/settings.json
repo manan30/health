@@ -5,6 +5,7 @@
     }
   ],
   "cSpell.words": [
+    "calsvg",
     "Hono",
     "hookform",
     "isbot",
@@ -12,6 +13,8 @@
     "nitropack",
     "ofetch",
     "Pipeable",
-    "Quickstart"
+    "Quickstart",
+    "Serv",
+    "tanstack"
   ]
 }
