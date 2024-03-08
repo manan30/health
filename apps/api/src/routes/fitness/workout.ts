@@ -1,8 +1,5 @@
-import { InferInsertModel, setupDb } from "db";
 import { Hono } from "hono";
-import { db } from "~/middleware/db";
 import { Env, Variables } from "~/types";
-import { isEmptyString } from "~/utils/functions";
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 
