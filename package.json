@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "dev": "turbo dev",
+    "dev": "pnpm run \"/dev:/\"",
+    "dev:app": "turbo dev --filter web-app",
+    "dev:api": "turbo dev --filter api",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },

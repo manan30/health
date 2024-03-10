@@ -19,7 +19,3 @@ export async function createWorkout(data: WorkoutInputs) {
 export async function getWorkoutById(id: string) {
   return fetchInstance<Workout>(`/workouts/${id}`);
 }
-
-export async function getIngredients() {
-  return fetchInstance<Ingredient[]>("/ingredients");
-}

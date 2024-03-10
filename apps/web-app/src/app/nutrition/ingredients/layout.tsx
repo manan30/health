@@ -1,13 +1,18 @@
 import React from "react";
-import { getIngredients } from "~/lib/data-fetching";
 import { DataTable } from "./table";
 import { columns } from "./columns";
+import { getAllIngredients } from "~/lib/data-fetching/ingredients";
 
 export default async function IngredientsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const ingredients = await getIngredients();
-  return <DataTable columns={columns} data={ingredients} />;
+  const ingredients = await getAllIngredients();
+  return (
+    <>
+      <DataTable columns={columns} data={ingredients} />
+      {children}
+    </>
+  );
 }

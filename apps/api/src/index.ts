@@ -11,7 +11,7 @@ const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath("/v1");
 app.use("*", db(), cors());
 
 app.route("/workouts", workoutRoutes);
-app.route("", ingredientRoutes);
+app.route("/nutrition", ingredientRoutes);
 
 showRoutes(app);
 
