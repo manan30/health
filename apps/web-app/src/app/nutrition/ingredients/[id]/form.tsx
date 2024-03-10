@@ -1,14 +1,16 @@
 "use client";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { FetchError } from "ofetch";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import useSWRMutation from "swr/mutation";
+import { Alert, AlertDescription } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
@@ -63,6 +65,7 @@ export function IngredientForm({ isNew }: IngredientFormProps) {
 function InnerForm() {
   const router = useRouter();
   const { handleSubmit, register, formState } = useForm<FormValues>();
+  const [error, setError] = useState<string | string[] | null>(null);
   const { trigger } = useSWRMutation(
     "createIngredient",
     (_url, { arg }: { arg: FormValues }) => {
@@ -72,16 +75,30 @@ function InnerForm() {
       onSuccess: async () => {
         router.push("/nutrition/ingredients");
       },
+      onError: (error) => {
+        if (error instanceof FetchError) {
+          if (error.data.error.issues) {
+            setError(
+              error.data.error.issues.map(
+                (issue: { message: string }) => issue.message
+              )
+            );
+          }
+          return;
+        }
+        setError(`An error occurred while saving the ingredient: ${error}`);
+      },
     }
   );
 
-  const onSubmit = async (data: FormValues) => {
-    await new Promise((resolve) => setTimeout(resolve, 10000));
-    await trigger(data);
-  };
-
   return (
-    <form className="px-1" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="px-1"
+      onSubmit={handleSubmit(async (data) => {
+        setError(null);
+        await trigger(data);
+      })}
+    >
       <div className="grid gap-4 pb-4">
         <div className="grid gap-4">
           <div className="grid gap-1.5">
@@ -224,6 +241,21 @@ function InnerForm() {
           </div>
         </div>
       </div>
+      {error ? (
+        <Alert className="mb-4" variant="destructive">
+          <AlertDescription className="text-xs px-2">
+            {error instanceof Array ? (
+              <ul className="list-disc">
+                {error.map((err, i) => (
+                  <li key={i}>{err}</li>
+                ))}
+              </ul>
+            ) : (
+              error
+            )}
+          </AlertDescription>
+        </Alert>
+      ) : null}
       <div className="flex items-center justify-end gap-2">
         <Button disabled={formState.isSubmitting} type="submit">
           {formState.isSubmitting ? (

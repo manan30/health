@@ -23,12 +23,18 @@ importers:
 
   apps/api:
     dependencies:
+      '@hono/zod-validator':
+        specifier: ^0.2.0
+        version: 0.2.0(hono@3.12.7)(zod@3.22.4)
       db:
         specifier: workspace:*
         version: link:../../packages/db
       hono:
         specifier: ^3.12.7
         version: 3.12.7
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20231218.0
@@ -1367,6 +1373,16 @@ packages:
 
   /@floating-ui/utils@0.2.1:
     resolution: {integrity: sha512-9TANp6GPoMtYzQdt54kfAyMmz1+osLlXdg2ENroU7zzrtflTLrrC/lgrIfaSe+Wu0b89GKccT7vxXA0MoAIO+Q==}
+    dev: false
+
+  /@hono/zod-validator@0.2.0(hono@3.12.7)(zod@3.22.4):
+    resolution: {integrity: sha512-PC7akbA/DCFY406BL3+ogjYb+7Fgfs/6XPvyURBYMczo0M7kYsTUMnF8hA9mez1RORNCWPqXuFGfKrkoUVPvrQ==}
+    peerDependencies:
+      hono: '>=3.9.0'
+      zod: ^3.19.1
+    dependencies:
+      hono: 3.12.7
+      zod: 3.22.4
     dev: false
 
   /@hookform/devtools@4.3.1(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0):
@@ -7589,4 +7605,3 @@ packages:
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
-    dev: true
