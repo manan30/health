@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { FetchError } from "ofetch";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import useSWRMutation from "swr/mutation";
 import { Alert, AlertDescription } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
@@ -101,6 +102,7 @@ function InnerForm({
     {
       onSuccess: async () => {
         router.push("/nutrition/ingredients");
+        toast.success("New ingredient added successfully");
       },
       onError: (error) => {
         if (error instanceof FetchError) {

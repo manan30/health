@@ -3,6 +3,8 @@
 import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { FetchError } from "ofetch";
+import { toast } from "sonner";
 import useSWRMutation from "swr/mutation";
 import {
   AlertDialog,
@@ -35,6 +37,14 @@ export function DeleteIngredientAlert({
       await deleteIngredient(id);
       setOpen(false);
       router.refresh();
+    },
+    {
+      onSuccess: () => {
+        toast.success("Ingredient deleted successfully");
+      },
+      onError: (error: Error | FetchError) => {
+        toast.error(error.message);
+      },
     }
   );
 

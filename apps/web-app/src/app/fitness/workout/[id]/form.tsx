@@ -17,8 +17,8 @@ import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
 import { Calendar } from "~/components/ui/calendar";
 import { Label } from "~/components/ui/label";
-import { createWorkout } from "~/lib/data-fetching";
 import { useRouter, usePathname } from "next/navigation";
+import { createWorkout } from "~/lib/data-fetching-old";
 
 type WorkoutFormProps = {
   workout?: WorkoutInputs;
