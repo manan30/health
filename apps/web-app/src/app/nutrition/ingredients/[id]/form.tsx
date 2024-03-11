@@ -1,4 +1,5 @@
 "use client";
+
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FetchError } from "ofetch";
@@ -10,6 +11,7 @@ import { Alert, AlertDescription } from "~/components/ui/alert";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -17,6 +19,13 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import {
   Ingredient,
   createIngredient,
@@ -53,7 +62,15 @@ export function IngredientForm({ isNew, ingredient }: IngredientFormProps) {
         }
       }}
     >
-      <DialogContent className="flex flex-col max-h-full sm:max-h-[32rem] overflow-auto">
+      <DialogContent
+        className="flex flex-col max-h-full sm:max-h-[32rem] overflow-auto"
+        onInteractOutside={(e) => {
+          e.preventDefault();
+        }}
+        onPointerDownOutside={(e) => {
+          e.preventDefault();
+        }}
+      >
         <DialogHeader>
           <DialogTitle>{isNew ? "Add New" : "Edit"} Ingredient</DialogTitle>
           <DialogDescription>
@@ -76,7 +93,7 @@ function InnerForm({
   isNew?: boolean;
 }) {
   const router = useRouter();
-  const { handleSubmit, register, formState } = useForm<FormValues>({
+  const { handleSubmit, register, formState, setValue } = useForm<FormValues>({
     defaultValues: {
       brand: ingredient?.brand ?? undefined,
       calories: ingredient?.calories,
@@ -180,16 +197,25 @@ function InnerForm({
               <Label className="text-sm" htmlFor="serving-unit">
                 Serving Unit
               </Label>
-              <Input
-                id="serving-unit"
-                placeholder="e.g. grams"
-                required
-                type="text"
-                disabled={formState.isSubmitting}
-                {...register("servingUnit", {
-                  required: true,
-                })}
-              />
+              <Select
+                value={ingredient?.servingUnit}
+                onValueChange={(value) => {
+                  setValue("servingUnit", value);
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="gm" />
+                </SelectTrigger>
+                <SelectContent side="top">
+                  {["gm", "ml", "unit", "lbs", "oz", "fl oz"].map(
+                    (pageSize) => (
+                      <SelectItem key={pageSize} value={`${pageSize}`}>
+                        {pageSize}
+                      </SelectItem>
+                    )
+                  )}
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
@@ -292,13 +318,15 @@ function InnerForm({
           ) : null}
           Save
         </Button>
-        <Button
-          disabled={formState.isSubmitting}
-          type="button"
-          variant="outline"
-        >
-          Cancel
-        </Button>
+        <DialogClose asChild>
+          <Button
+            disabled={formState.isSubmitting}
+            type="button"
+            variant="outline"
+          >
+            Cancel
+          </Button>
+        </DialogClose>
       </div>
     </form>
   );

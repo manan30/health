@@ -20,7 +20,10 @@ export const columns: ColumnDef<Ingredient>[] = [
     header: "Name",
   },
   {
-    header: "Calories per gram",
+    header: "Calories per measure",
+    cell: ({ row }) => {
+      return (row.original.calories / row.original.servingSize).toFixed(2);
+    },
   },
   {
     accessorKey: "calories",
@@ -28,7 +31,7 @@ export const columns: ColumnDef<Ingredient>[] = [
   },
   {
     accessorKey: "servingsSize",
-    header: "Servings Size",
+    header: "Serving Size",
     cell: ({ row }) =>
       `${row.original.servingSize}${row.original.servingUnit[0]}`,
   },
@@ -63,14 +66,14 @@ export const columns: ColumnDef<Ingredient>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuItem asChild>
                 <Link
-                  className="cursor-pointer"
+                  className="cursor-pointer text-xs"
                   href={`/nutrition/ingredients/${row.original.id}`}
                 >
                   Edit
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="text-destructive hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive/10 focus:text-destructive cursor-pointer"
+                className="text-destructive hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive/10 focus:text-destructive cursor-pointer text-xs"
                 onClick={() => {
                   setShowDeleteAlert(true);
                 }}
