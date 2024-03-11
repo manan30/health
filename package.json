@@ -2,7 +2,7 @@
   "name": "health",
   "private": true,
   "scripts": {
-    "build": "turbo build",
+    "build:app": "turbo build --filter web-app",
     "dev": "pnpm run \"/dev:/\"",
     "dev:app": "turbo dev --filter web-app",
     "dev:api": "turbo dev --filter api",
