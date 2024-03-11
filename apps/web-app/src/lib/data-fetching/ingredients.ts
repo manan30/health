@@ -60,3 +60,9 @@ export async function updateIngredient(id: number, data: CreateIngredientBody) {
     method: "PUT",
   });
 }
+
+export async function deleteIngredient(id: number) {
+  return fetchInstance(`/${id}`, {
+    method: "DELETE",
+  });
+}

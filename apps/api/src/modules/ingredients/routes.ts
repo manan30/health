@@ -179,4 +179,28 @@ app.put(
   }
 );
 
+app.delete(
+  "/:id",
+  zValidator("param", z.object({ id: z.string() })),
+  async (c) => {
+    const db = c.get("db");
+    const schema = c.get("schema");
+    const id = c.req.param("id");
+
+    const ingredient = await db.query.ingredient.findFirst({
+      where: (ingredients, { eq }) => eq(ingredients.id, Number(id)),
+    });
+
+    if (!ingredient) {
+      return c.newResponse("Ingredient not found", 404);
+    }
+
+    await db
+      .delete(schema.ingredient)
+      .where(eq(schema.ingredient.id, Number(id)));
+
+    return c.newResponse(null, 204);
+  }
+);
+
 export const ingredientRoutes = app;
