@@ -8,4 +8,4 @@
 
 - [ ] filter ingredients by store and brand
 - [ ] Add form loading state for ingredient form
-- [ ] Ingredients table should refresh after action
+- [x] Ingredients table should refresh after action

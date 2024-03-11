@@ -20,7 +20,7 @@ export const columns: ColumnDef<Ingredient>[] = [
     header: "Name",
   },
   {
-    header: "Calories per measure",
+    header: "Unit Calories",
     cell: ({ row }) => {
       return (row.original.calories / row.original.servingSize).toFixed(2);
     },

@@ -4,7 +4,6 @@ import { columns } from "./columns";
 import { getAllIngredients } from "~/lib/data-fetching/ingredients";
 import Link from "next/link";
 import { buttonVariants } from "~/components/ui/button";
-import { PlusIcon } from "lucide-react";
 
 export default async function IngredientsLayout({
   children,
@@ -36,3 +35,5 @@ export default async function IngredientsLayout({
     </>
   );
 }
+
+export const dynamic = "force-dynamic";
