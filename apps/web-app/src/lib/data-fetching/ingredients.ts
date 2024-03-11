@@ -49,3 +49,14 @@ export async function createIngredient(data: CreateIngredientBody) {
 export async function getAllIngredients() {
   return fetchInstance<Ingredient[]>("");
 }
+
+export async function getIngredient(id: number) {
+  return fetchInstance<Ingredient>(`/${id}`);
+}
+
+export async function updateIngredient(id: number, data: CreateIngredientBody) {
+  return fetchInstance<Ingredient>(`/${id}`, {
+    body: data,
+    method: "PUT",
+  });
+}

@@ -16,10 +16,15 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { createIngredient } from "~/lib/data-fetching/ingredients";
+import {
+  Ingredient,
+  createIngredient,
+  updateIngredient,
+} from "~/lib/data-fetching/ingredients";
 
 type IngredientFormProps = {
   isNew?: boolean;
+  ingredient: Ingredient | null;
 };
 
 type FormValues = {
@@ -35,7 +40,7 @@ type FormValues = {
   fiber?: number;
 };
 
-export function IngredientForm({ isNew }: IngredientFormProps) {
+export function IngredientForm({ isNew, ingredient }: IngredientFormProps) {
   const router = useRouter();
 
   return (
@@ -55,20 +60,42 @@ export function IngredientForm({ isNew }: IngredientFormProps) {
           </DialogDescription>
         </DialogHeader>
         <div className="min-h-full overflow-auto">
-          <InnerForm />
+          <InnerForm ingredient={ingredient} isNew={isNew} />
         </div>
       </DialogContent>
     </Dialog>
   );
 }
 
-function InnerForm() {
+function InnerForm({
+  ingredient,
+  isNew,
+}: {
+  ingredient: Ingredient | null;
+  isNew?: boolean;
+}) {
   const router = useRouter();
-  const { handleSubmit, register, formState } = useForm<FormValues>();
+  const { handleSubmit, register, formState } = useForm<FormValues>({
+    defaultValues: {
+      brand: ingredient?.brand ?? undefined,
+      calories: ingredient?.calories,
+      carbs: ingredient?.macros?.carbs,
+      fat: ingredient?.macros?.fat,
+      fiber: ingredient?.macros?.fiber,
+      name: ingredient?.name,
+      protein: ingredient?.macros?.protein,
+      servingSize: ingredient?.servingSize,
+      servingUnit: ingredient?.servingUnit,
+      store: ingredient?.store ?? undefined,
+    },
+  });
   const [error, setError] = useState<string | string[] | null>(null);
   const { trigger } = useSWRMutation(
     "createIngredient",
     (_url, { arg }: { arg: FormValues }) => {
+      if (ingredient) {
+        return updateIngredient(ingredient.id, arg);
+      }
       return createIngredient(arg);
     },
     {
