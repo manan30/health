@@ -33,7 +33,7 @@ export interface CreateIngredientBody {
 }
 
 export const fetchInstance = fetch.create({
-  baseURL: "http://localhost:8787/v1/nutrition/ingredients",
+  baseURL: "http://localhost:8787/health/v1/nutrition/ingredients",
   headers: {
     "Content-Type": "application/json",
   },
