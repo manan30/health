@@ -46,14 +46,14 @@ export function DataTable<TData, TValue>({
       <div className="p-1">
         <Input
           placeholder="Filter by name, store or brand"
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="w-full sm:max-w-sm self-end placeholder:text-xs text-xs"
         />
       </div>
-      <div className="rounded-md border overflow-y-auto">
+      <div className="rounded-md border overflow-y-auto flex-1">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
