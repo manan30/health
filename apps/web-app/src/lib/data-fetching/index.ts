@@ -1,7 +1,7 @@
 import { ofetch as fetch } from "ofetch";
 
 export const fetchInstance = fetch.create({
-  baseURL: "http://localhost:8787/v1",
+  baseURL: process.env.API_URL,
   headers: {
     "Content-Type": "application/json",
   },

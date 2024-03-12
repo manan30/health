@@ -7,7 +7,7 @@ import workoutRoutes from "~/routes/fitness/workout";
 import { ingredientRoutes } from "~/modules/ingredients";
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
-  "/health/v1"
+  "/api/v1"
 );
 
 app.use("*", db(), cors());
