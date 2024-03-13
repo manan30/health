@@ -9,6 +9,10 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
+    "db:push": {
+      "cache": false,
+      "env": ["DATABASE_URL"]
+    },
     "dev": {
       "cache": false,
       "persistent": true

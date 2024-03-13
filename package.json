@@ -6,6 +6,7 @@
     "dev": "pnpm run \"/dev:/\"",
     "dev:app": "turbo dev --filter web-app",
     "dev:api": "turbo dev --filter api",
+    "db:apply-changes": "turbo db:push --filter db",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
