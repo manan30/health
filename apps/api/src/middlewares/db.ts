@@ -7,8 +7,9 @@ export const db = (): MiddlewareHandler<{
   Variables: Variables;
 }> => {
   return async (c, next) => {
-    console.log(JSON.stringify(c.env, null, 2));
-    const db = setupDb(c.env.DATABASE_URL);
+    const dbUrl = c.env.DATABASE_URL;
+    console.log("dbUrl", dbUrl);
+    const db = setupDb(dbUrl);
     c.set("db", db);
     c.set("schema", schema);
     await next();
