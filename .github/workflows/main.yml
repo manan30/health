@@ -54,7 +54,7 @@ jobs:
         uses: ./.github/actions/install
 
       - name: Disable Next Telemetry
-        run: pnpm exec next telemetry disable
+        run: npx next telemetry disable
 
       - name: Build
         run: pnpm turbo run build --filter='./apps/web-app'
