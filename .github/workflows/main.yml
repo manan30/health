@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - run: echo "DATABASE_URL=$DATABASE_URL"
       - uses: actions/checkout@v4
 
       - uses: pnpm/action-setup@v3
