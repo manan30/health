@@ -1,4 +1,5 @@
 import { ofetch as fetch } from "ofetch";
+import { BASE_API_URL } from "./constants";
 
 export interface Ingredient {
   id: number;
@@ -33,7 +34,7 @@ export interface CreateIngredientBody {
 }
 
 export const fetchInstance = fetch.create({
-  baseURL: "http://localhost:8787/health/v1/nutrition/ingredients",
+  baseURL: `${BASE_API_URL}/nutrition/ingredients`,
   headers: {
     "Content-Type": "application/json",
   },
