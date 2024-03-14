@@ -33,7 +33,7 @@ export const columns: ColumnDef<Ingredient>[] = [
     accessorKey: "servingsSize",
     header: "Serving Size",
     cell: ({ row }) =>
-      `${row.original.servingSize}${row.original.servingUnit[0]}`,
+      `${row.original.servingSize} ${row.original.servingUnit}`,
   },
   {
     accessorKey: "store",

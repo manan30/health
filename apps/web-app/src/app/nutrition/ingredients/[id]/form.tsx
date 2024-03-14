@@ -31,6 +31,7 @@ import {
   createIngredient,
   updateIngredient,
 } from "~/lib/data-fetching/ingredients";
+import { cn } from "~/lib/utils";
 
 type IngredientFormProps = {
   isNew?: boolean;
@@ -93,20 +94,21 @@ function InnerForm({
   isNew?: boolean;
 }) {
   const router = useRouter();
-  const { handleSubmit, register, formState, setValue } = useForm<FormValues>({
-    defaultValues: {
-      brand: ingredient?.brand ?? undefined,
-      calories: ingredient?.calories,
-      carbs: ingredient?.macros?.carbs,
-      fat: ingredient?.macros?.fat,
-      fiber: ingredient?.macros?.fiber,
-      name: ingredient?.name,
-      protein: ingredient?.macros?.protein,
-      servingSize: ingredient?.servingSize,
-      servingUnit: ingredient?.servingUnit,
-      store: ingredient?.store ?? undefined,
-    },
-  });
+  const { handleSubmit, register, formState, setValue, watch } =
+    useForm<FormValues>({
+      defaultValues: {
+        brand: ingredient?.brand ?? undefined,
+        calories: ingredient?.calories,
+        carbs: ingredient?.macros?.carbs,
+        fat: ingredient?.macros?.fat,
+        fiber: ingredient?.macros?.fiber,
+        name: ingredient?.name,
+        protein: ingredient?.macros?.protein,
+        servingSize: ingredient?.servingSize,
+        servingUnit: ingredient?.servingUnit,
+        store: ingredient?.store ?? undefined,
+      },
+    });
   const [error, setError] = useState<string | string[] | null>(null);
   const { trigger } = useSWRMutation(
     "createIngredient",
@@ -137,6 +139,8 @@ function InnerForm({
       },
     }
   );
+
+  const servingUnit = watch("servingUnit");
 
   return (
     <form
@@ -204,7 +208,12 @@ function InnerForm({
                   setValue("servingUnit", value);
                 }}
               >
-                <SelectTrigger className="w-full">
+                <SelectTrigger
+                  className={cn(
+                    "w-full",
+                    !servingUnit && "text-muted-foreground"
+                  )}
+                >
                   <SelectValue placeholder="gm" />
                 </SelectTrigger>
                 <SelectContent side="top">

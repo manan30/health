@@ -82,6 +82,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="whitespace-nowrap"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="font-normal text-xs">
