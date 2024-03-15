@@ -7,7 +7,6 @@ export * from 'drizzle-orm';
 export { schema };
 
 export function setupDb(dbUrl: string) {
-  console.log('dbUrl', dbUrl);
   const sql = neon(dbUrl);
   const db = drizzle(sql, { schema, logger: true });
   return db;

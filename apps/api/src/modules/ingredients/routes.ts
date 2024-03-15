@@ -173,8 +173,6 @@ app.put(
       .where(eq(schema.ingredient.id, Number(id)))
       .returning();
 
-    console.log(JSON.stringify(updatedIngredient, null, 2));
-
     return c.json(new Ingredient(updatedIngredient[0]));
   }
 );
