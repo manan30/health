@@ -19,7 +19,11 @@ app.route("/nutrition", ingredientRoutes);
 
 showRoutes(app);
 
-console.log("app initialized");
+app.notFound((c) => {
+  console.log(c.req.url);
+  showRoutes(app);
+  return c.text("Custom 404 Message", 404);
+});
 
 export default {
   fetch: app.fetch,
