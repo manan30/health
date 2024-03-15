@@ -10,10 +10,16 @@ const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath("/v1");
 
 app.use("*", db(), cors());
 
+app.get("/", (c) => {
+  return c.json({ message: "Hello, world!" });
+});
+
 app.route("/workouts", workoutRoutes);
 app.route("/nutrition", ingredientRoutes);
 
 showRoutes(app);
+
+console.log("app initialized");
 
 export default {
   fetch: app.fetch,
