@@ -6,9 +6,7 @@ import { Env, Variables } from "./types";
 import workoutRoutes from "~/routes/fitness/workout";
 import { ingredientRoutes } from "~/modules/ingredients";
 
-const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
-  "/api/v1"
-);
+const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath("/v1");
 
 app.use("*", db(), cors());
 
@@ -17,4 +15,6 @@ app.route("/nutrition", ingredientRoutes);
 
 showRoutes(app);
 
-export default app;
+export default {
+  fetch: app.fetch,
+};
