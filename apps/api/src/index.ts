@@ -12,25 +12,13 @@ const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
 
 app.use("*", db(), cors());
 
-app.get("*", (c) => {
-  console.log(c.req.url);
-  return c.json({ message: "Hello, world!" });
-});
-
-app.get("/", (c) => {
-  return c.json({ message: "Hello, world!" });
-});
-
 app.route("/workouts", workoutRoutes);
 app.route("/nutrition", ingredientRoutes);
 
 showRoutes(app);
 
 app.notFound((c) => {
-  const { req } = c;
-  console.log(JSON.stringify(req, null, 2));
-  showRoutes(app, { verbose: true });
-  return c.text("Custom 404 Message", 404);
+  return c.text("Nothing to see here!", 404);
 });
 
 export default {
