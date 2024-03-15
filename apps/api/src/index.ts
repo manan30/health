@@ -10,6 +10,11 @@ const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath("/v1");
 
 app.use("*", db(), cors());
 
+app.get("*", (c) => {
+  console.log(c.req.url);
+  return c.json({ message: "Hello, world!" });
+});
+
 app.get("/", (c) => {
   return c.json({ message: "Hello, world!" });
 });
@@ -21,7 +26,7 @@ showRoutes(app);
 
 app.notFound((c) => {
   console.log(c.req.url);
-  showRoutes(app);
+  showRoutes(app, { verbose: true });
   return c.text("Custom 404 Message", 404);
 });
 
