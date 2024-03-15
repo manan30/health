@@ -25,7 +25,7 @@ app.route("/nutrition", ingredientRoutes);
 showRoutes(app);
 
 app.notFound((c) => {
-  console.log(c.req.url);
+  console.log({ url: c.req.url, path: c.req.path, routePath: c.req.routePath });
   showRoutes(app, { verbose: true });
   return c.text("Custom 404 Message", 404);
 });
