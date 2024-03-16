@@ -1,6 +1,6 @@
 import { getIngredient } from "~/lib/data-fetching/ingredients";
-import { NEW_ROUTE } from "./constants";
 import { IngredientForm } from "./form";
+import { NEW_ROUTE } from "~/app/utils/constants";
 
 export default async function IngredientPage({
   params,

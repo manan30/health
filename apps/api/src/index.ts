@@ -4,7 +4,7 @@ import { showRoutes } from "hono/dev";
 import { db } from "./middlewares/db";
 import { Env, Variables } from "./types";
 import workoutRoutes from "~/routes/fitness/workout";
-import { ingredientRoutes } from "~/modules/ingredients";
+import { nutritionRoutes } from "./modules/nutrition";
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
   "/health/v1"
@@ -13,7 +13,7 @@ const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
 app.use("*", db(), cors());
 
 app.route("/workouts", workoutRoutes);
-app.route("/nutrition", ingredientRoutes);
+app.route("/", nutritionRoutes);
 
 showRoutes(app);
 
