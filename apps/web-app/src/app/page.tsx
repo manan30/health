@@ -20,6 +20,12 @@ export default function RootPage() {
             <CardDescription>Manage your ingredients</CardDescription>
           </Card>
         </Link>
+        <Link href="/nutrition/recipes">
+          <Card className="p-4 flex flex-col space-y-1.5 hover:bg-muted/50">
+            <CardTitle>Recipes</CardTitle>
+            <CardDescription>Manage your recipes</CardDescription>
+          </Card>
+        </Link>
       </div>
     </div>
   );

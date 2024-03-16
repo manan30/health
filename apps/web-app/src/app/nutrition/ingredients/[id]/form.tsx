@@ -122,7 +122,11 @@ function InnerForm({
       onSuccess: async () => {
         router.push("/nutrition/ingredients");
         router.refresh();
-        toast.success("New ingredient added successfully");
+        toast.success(
+          ingredient
+            ? "Ingredient updated successfully"
+            : "New ingredient added successfully"
+        );
       },
       onError: (error) => {
         if (error instanceof FetchError) {

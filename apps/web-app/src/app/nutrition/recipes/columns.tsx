@@ -10,11 +10,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { Ingredient } from "~/models";
-import { DeleteIngredientAlert } from "./delete-ingredient-alert";
+import { Recipe } from "~/models";
 import { useState } from "react";
 
-export const columns: ColumnDef<Ingredient>[] = [
+export const columns: ColumnDef<Recipe>[] = [
   {
     accessorKey: "name",
     header: "Name",
@@ -22,32 +21,18 @@ export const columns: ColumnDef<Ingredient>[] = [
   {
     header: "Unit Calories",
     cell: ({ row }) => {
-      return (row.original.calories / row.original.servingSize).toFixed(2);
+      return (
+        Number(row.original.totalCalories) / Number(row.original.totalWeight)
+      ).toFixed(2);
     },
   },
   {
-    accessorKey: "calories",
+    accessorKey: "totalCalories",
     header: "Total Calories",
   },
   {
-    accessorKey: "servingsSize",
-    header: "Serving Size",
-    cell: ({ row }) =>
-      `${row.original.servingSize} ${row.original.servingUnit}`,
-  },
-  {
-    accessorKey: "store",
-    header: "Store",
-    cell: ({ row }) => {
-      return row.original.store ? row.original.store : "-";
-    },
-  },
-  {
-    accessorKey: "brand",
-    header: "Brand",
-    cell: ({ row }) => {
-      return row.original.brand ? row.original.brand : "-";
-    },
+    accessorKey: "totalWeight",
+    header: "Total Quantity",
   },
   {
     id: "actions",
@@ -73,20 +58,20 @@ export const columns: ColumnDef<Ingredient>[] = [
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="text-destructive hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive/10 focus:text-destructive cursor-pointer text-xs"
+                className="text-green-800 hover:bg-green-200 hover:text-destructive-foreground focus:bg-destructive/10 focus:text-destructive cursor-pointer text-xs"
                 onClick={() => {
                   setShowDeleteAlert(true);
                 }}
               >
-                Delete
+                Mark Completed
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <DeleteIngredientAlert
+          {/* <DeleteIngredientAlert
             setOpen={setShowDeleteAlert}
             open={showDeleteAlert}
             id={row.original.id}
-          />
+          /> */}
         </>
       );
     },

@@ -84,6 +84,9 @@ importers:
       date-fns:
         specifier: ^3.3.1
         version: 3.3.1
+      db:
+        specifier: workspace:*
+        version: link:../../packages/db
       lucide-react:
         specifier: ^0.354.0
         version: 0.354.0(react@18.2.0)

@@ -1,5 +1,5 @@
 import { ofetch as fetch } from "ofetch";
-import { Ingredient } from "~/models/ingredient";
+import { Ingredient } from "~/models";
 import { Workout } from "~/types";
 
 const fetchInstance = fetch.create({

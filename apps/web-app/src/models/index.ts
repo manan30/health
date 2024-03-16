@@ -1,3 +1,5 @@
+import { RecipesSelectModel } from "db";
+
 export interface Ingredient {
   id: number;
   name: string;
@@ -15,3 +17,5 @@ export interface Ingredient {
   } | null;
   createdAt: Date;
 }
+
+export type Recipe = RecipesSelectModel;
