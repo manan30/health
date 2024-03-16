@@ -2,8 +2,8 @@ import { Hono } from "hono";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
 import { Variables, Env } from "~/types";
-import { Ingredient } from "./model";
 import { eq } from "db";
+import { Ingredient } from "./models/ingredient";
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
   "/ingredients"

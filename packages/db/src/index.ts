@@ -4,6 +4,7 @@ import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from './schema';
 
 export * from 'drizzle-orm';
+export * from './types';
 export { schema };
 
 export function setupDb(dbUrl: string) {
