@@ -7,6 +7,7 @@ import {
   timestamp,
 } from 'drizzle-orm/pg-core';
 import { recipe } from './recipe';
+import { ingredient } from './ingredient';
 
 export const recipeIngredient = pgTable('recipe_ingredient', {
   id: serial('id').primaryKey(),
@@ -24,6 +25,10 @@ export const recipeIngredientRelations = relations(
     recipe: one(recipe, {
       fields: [recipeIngredient.recipeId],
       references: [recipe.id],
+    }),
+    ingredient: one(ingredient, {
+      fields: [recipeIngredient.ingredientId],
+      references: [ingredient.id],
     }),
   })
 );

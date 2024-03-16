@@ -52,18 +52,58 @@ app.post("/", zValidator("json", createRecipeRequest), async (c) => {
     })
     .returning();
 
-  const recipeIngredients = await db
-    .insert(schema.recipeIngredient)
-    .values(
-      body.ingredients.map((ingredient) => ({
-        recipeId: recipe[0].id,
-        ingredientId: ingredient.id,
-        quantity: `${ingredient.quantity}`,
-      }))
-    )
-    .returning();
+  await db.insert(schema.recipeIngredient).values(
+    body.ingredients.map((ingredient) => ({
+      recipeId: recipe[0].id,
+      ingredientId: ingredient.id,
+      quantity: `${ingredient.quantity}`,
+    }))
+  );
 
-  return c.json({});
+  const createdRecipe = await db.query.recipe.findFirst({
+    where: (recipes, { eq }) => eq(recipes.id, recipe[0].id),
+    with: {
+      recipeIngredients: {
+        with: {
+          ingredient: true,
+        },
+      },
+    },
+  });
+
+  if (!createdRecipe) {
+    return c.newResponse("Recipe not found", 404);
+  }
+
+  let totalCalories = 0;
+  let totalWeight = 0;
+
+  for (const recipeIngredient of createdRecipe.recipeIngredients) {
+    const { ingredient } = recipeIngredient;
+    const { calories, servingSize } = ingredient;
+    const unitCalories = calories / servingSize;
+    const ingredientCalories = unitCalories * Number(recipeIngredient.quantity);
+    totalCalories += ingredientCalories;
+    totalWeight += Number(recipeIngredient.quantity);
+  }
+
+  await db.update(schema.recipe).set({
+    totalCalories: `${totalCalories}`,
+    totalWeight: `${totalWeight}`,
+  });
+
+  const updatedRecipe = await db.query.recipe.findFirst({
+    where: (recipes, { eq }) => eq(recipes.id, recipe[0].id),
+    with: {
+      recipeIngredients: {
+        with: {
+          ingredient: true,
+        },
+      },
+    },
+  });
+
+  return c.json(updatedRecipe);
 });
 
 // app.put(
