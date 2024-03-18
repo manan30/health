@@ -33,6 +33,11 @@ export interface CreateIngredientBody {
   sugar?: number;
 }
 
+export type SearchIngredients = Pick<
+  Ingredient,
+  "id" | "name" | "store" | "brand"
+>[];
+
 export const fetchInstance = fetch.create({
   baseURL: `${BASE_API_URL}/nutrition/ingredients`,
   headers: {
@@ -66,4 +71,8 @@ export async function deleteIngredient(id: number) {
   return fetchInstance(`/${id}`, {
     method: "DELETE",
   });
+}
+
+export async function searchIngredients(query: string = "") {
+  return fetchInstance<SearchIngredients>(`/search?q=${query}`);
 }

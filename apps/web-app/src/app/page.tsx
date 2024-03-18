@@ -13,7 +13,7 @@ export default function RootPage() {
           My personal health and fitness tracker
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 mt-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 mt-8 gap-4">
         <Link href="/nutrition/ingredients">
           <Card className="p-4 flex flex-col space-y-1.5 hover:bg-muted/50">
             <CardTitle>Ingredients</CardTitle>

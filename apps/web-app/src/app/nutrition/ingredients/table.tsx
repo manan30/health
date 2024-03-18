@@ -62,7 +62,7 @@ export function DataTable<TData, TValue>({
                   return (
                     <TableHead
                       key={header.id}
-                      className="text-secondary-foreground whitespace-nowrap"
+                      className="text-secondary-foreground whitespace-nowrap px-5"
                     >
                       {header.isPlaceholder
                         ? null
@@ -85,7 +85,10 @@ export function DataTable<TData, TValue>({
                   className="whitespace-nowrap"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="font-normal text-xs">
+                    <TableCell
+                      key={cell.id}
+                      className="font-normal text-sm px-5"
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

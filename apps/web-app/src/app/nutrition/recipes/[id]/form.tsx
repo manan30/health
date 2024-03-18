@@ -1,10 +1,10 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Loader2, PlusCircle, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FetchError } from "ofetch";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import useSWRMutation from "swr/mutation";
 import { Alert, AlertDescription } from "~/components/ui/alert";
@@ -19,27 +19,21 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
-import {
-  Ingredient,
-  createIngredient,
-  updateIngredient,
-} from "~/lib/data-fetching/ingredients";
-import { cn } from "~/lib/utils";
+import { Recipe } from "~/models";
+import { IngredientsCombobox } from "~/components/ingredients-combobox";
+import { createRecipe } from "~/lib/data-fetching/recipes";
 
 type RecipeFormProps = {
   isNew?: boolean;
-  recipe: Ingredient | null;
+  recipe: Recipe | null;
 };
 
 type FormValues = {
   name: string;
+  ingredients: {
+    id: number | null;
+    quantity: number | null;
+  }[];
 };
 
 export function RecipeForm({ isNew, recipe }: RecipeFormProps) {
@@ -50,7 +44,7 @@ export function RecipeForm({ isNew, recipe }: RecipeFormProps) {
       open
       onOpenChange={(open) => {
         if (!open) {
-          router.push("/nutrition/ingredients");
+          router.push("/nutrition/recipes");
         }
       }}
     >
@@ -81,53 +75,62 @@ function InnerForm({
   recipe,
   isNew,
 }: {
-  recipe: Ingredient | null;
+  recipe: Recipe | null;
   isNew?: boolean;
 }) {
   const router = useRouter();
-  const { handleSubmit, register, formState, setValue, watch } =
+  const { handleSubmit, register, formState, setValue, watch, control } =
     useForm<FormValues>({
-      defaultValues: {},
+      defaultValues: {
+        name: recipe?.name || "",
+        ingredients: recipe?.recipeIngredients.map((ing) => ({
+          id: ing.ingredientId,
+          quantity: Number(ing.quantity),
+        })) || [{ id: null, quantity: null }],
+      },
     });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "ingredients",
+    rules: { minLength: 1, required: true },
+  });
   const [error, setError] = useState<string | string[] | null>(null);
-  // const { trigger } = useSWRMutation(
-  //   "createIngredient",
-  //   (_url, { arg }: { arg: FormValues }) => {
-  //     if (ingredient) {
-  //       return updateIngredient(ingredient.id, arg);
-  //     }
-  //     return createIngredient(arg);
-  //   },
-  //   {
-  //     onSuccess: async () => {
-  //       router.push("/nutrition/ingredients");
-  //       router.refresh();
-  //       toast.success("New ingredient added successfully");
-  //     },
-  //     onError: (error) => {
-  //       if (error instanceof FetchError) {
-  //         if (error.data.error.issues) {
-  //           setError(
-  //             error.data.error.issues.map(
-  //               (issue: { message: string }) => issue.message
-  //             )
-  //           );
-  //         }
-  //         return;
-  //       }
-  //       setError(`An error occurred while saving the ingredient: ${error}`);
-  //     },
-  //   }
-  // );
-
-  // const servingUnit = watch("servingUnit");
+  const { trigger } = useSWRMutation(
+    "createRecipe",
+    (_url, { arg }: { arg: FormValues }) => {
+      if (recipe) {
+        // return updateIngredient(ingredient.id, arg);
+      }
+      return createRecipe(arg);
+    },
+    {
+      onSuccess: async () => {
+        router.push("/nutrition/recipes");
+        router.refresh();
+        toast.success("New Recipe added successfully");
+      },
+      onError: (error) => {
+        if (error instanceof FetchError) {
+          if (error.data.error.issues) {
+            setError(
+              error.data.error?.issues.map(
+                (issue: { message: string }) => issue.message
+              )
+            );
+          }
+          return;
+        }
+        setError(`An error occurred while saving the recipe: ${error}`);
+      },
+    }
+  );
 
   return (
     <form
       className="px-1"
       onSubmit={handleSubmit(async (data) => {
         setError(null);
-        // await trigger(data);
+        await trigger(data);
       })}
     >
       <div className="grid gap-4 pb-4">
@@ -138,152 +141,69 @@ function InnerForm({
             </Label>
             <Input
               id="name"
-              placeholder="Enter the name of the ingredient"
+              placeholder="Enter the name of the recipe"
               required
               type="text"
               disabled={formState.isSubmitting}
               {...register("name", { required: true })}
             />
           </div>
-          <div className="grid gap-1.5">
-            {/* <Label className="text-sm" htmlFor="calories">
-              Calories
-            </Label>
-            <Input
-              id="calories"
-              placeholder="0"
-              required
-              type="tel"
-              disabled={formState.isSubmitting}
-              {...register("calories", {
-                required: true,
-                valueAsNumber: true,
-              })}
-            /> */}
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="grid gap-1.5">
-              {/* <Label className="text-sm" htmlFor="serving-size">
-                Serving Size
-              </Label>
-              <Input
-                id="serving-size"
-                placeholder="0"
-                required
-                type="tel"
-                disabled={formState.isSubmitting}
-                {...register("servingSize", {
-                  required: true,
-                  valueAsNumber: true,
-                })}
-              /> */}
-            </div>
-            <div className="grid gap-1.5">
-              {/* <Label className="text-sm" htmlFor="serving-unit">
-                Serving Unit
-              </Label>
-              <Select
-                value={ingredient?.servingUnit}
-                onValueChange={(value) => {
-                  setValue("servingUnit", value);
+          <h3 className="font-medium">Ingredients</h3>
+          {fields.map((_field, id) => (
+            <div className="flex items-end gap-2">
+              <div className="grid gap-1.5 flex-1 shrink-0">
+                <Label className="text-sm" htmlFor="serving-unit">
+                  Name
+                </Label>
+                <IngredientsCombobox
+                  onSelect={(ingredient) => {
+                    setValue(`ingredients.${id}.id`, ingredient);
+                  }}
+                />
+              </div>
+              <div className="grid gap-1.5 w-[5.5rem]">
+                <Label className="text-sm" htmlFor="name">
+                  Quantity
+                </Label>
+                <Input
+                  id="name"
+                  placeholder="Quantity"
+                  required
+                  type="tel"
+                  disabled={formState.isSubmitting}
+                  {...register(`ingredients.${id}.quantity`, {
+                    required: true,
+                    valueAsNumber: true,
+                  })}
+                />
+              </div>
+              <Button
+                variant="link"
+                className="ml-auto p-0 text-destructive"
+                onClick={() => {
+                  if (fields.length > 1) remove(id);
                 }}
+                type="button"
               >
-                <SelectTrigger
-                  className={cn(
-                    "w-full",
-                    !servingUnit && "text-muted-foreground"
-                  )}
-                >
-                  <SelectValue placeholder="gm" />
-                </SelectTrigger>
-                <SelectContent side="top">
-                  {["gm", "ml", "unit", "lbs", "oz", "fl oz"].map(
-                    (pageSize) => (
-                      <SelectItem key={pageSize} value={`${pageSize}`}>
-                        {pageSize}
-                      </SelectItem>
-                    )
-                  )}
-                </SelectContent>
-              </Select> */}
+                <Trash2 className="h-4 w-4 ml-2" />
+              </Button>
             </div>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="grid gap-1.5">
-              {/* <Label className="text-sm" htmlFor="store">
-                Store
-              </Label>
-              <Input
-                id="store"
-                placeholder="Optional"
-                type="text"
-                disabled={formState.isSubmitting}
-                {...register("store")}
-              /> */}
+          ))}
+          {fields.length ? (
+            <div className="flex justify-end w-full">
+              <Button
+                variant="link"
+                className="w-fit content-end p-0"
+                onClick={() => {
+                  append({ id: null, quantity: null });
+                }}
+                type="button"
+              >
+                <PlusCircle className="h-4 w-4 mr-2" />
+                Add Ingredient
+              </Button>
             </div>
-            <div className="grid gap-1.5">
-              <Label className="text-sm" htmlFor="brand">
-                Brand
-              </Label>
-              {/* <Input
-                id="brand"
-                placeholder="Optional"
-                type="text"
-                disabled={formState.isSubmitting}
-                {...register("brand")}
-              /> */}
-            </div>
-          </div>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="grid gap-1.5">
-            <Label className="text-sm" htmlFor="protein">
-              Protein (g)
-            </Label>
-            {/* <Input
-              id="protein"
-              placeholder="0"
-              type="tel"
-              disabled={formState.isSubmitting}
-              {...register("protein", { valueAsNumber: true })}
-            /> */}
-          </div>
-          <div className="grid gap-1.5">
-            <Label className="text-sm" htmlFor="fat">
-              Fat (g)
-            </Label>
-            {/* <Input
-              id="fat"
-              placeholder="0"
-              type="tel"
-              disabled={formState.isSubmitting}
-              {...register("fat", { valueAsNumber: true })}
-            /> */}
-          </div>
-          <div className="grid gap-1.5">
-            <Label className="text-sm" htmlFor="carbs">
-              Carbs (g)
-            </Label>
-            {/* <Input
-              id="carbs"
-              placeholder="0"
-              type="tel"
-              disabled={formState.isSubmitting}
-              {...register("carbs", { valueAsNumber: true })}
-            /> */}
-          </div>
-          <div className="grid gap-1.5">
-            <Label className="text-sm" htmlFor="fiber">
-              Fiber (g)
-            </Label>
-            {/* <Input
-              id="fiber"
-              placeholder="0"
-              type="tel"
-              disabled={formState.isSubmitting}
-              {...register("fiber", { valueAsNumber: true })}
-            /> */}
-          </div>
+          ) : null}
         </div>
       </div>
       {error ? (

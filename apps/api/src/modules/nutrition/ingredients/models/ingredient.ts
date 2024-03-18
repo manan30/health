@@ -1,3 +1,5 @@
+import { BaseModel } from "~/core/models";
+
 export interface IIngredient {
   id: number;
   name: string;
@@ -16,7 +18,7 @@ export interface IIngredient {
   createdAt: string;
 }
 
-export class Ingredient {
+export class Ingredient extends BaseModel<IIngredient> {
   id: number;
   name: string;
   calories: number;
@@ -34,6 +36,7 @@ export class Ingredient {
   createdAt: Date;
 
   constructor(values: IIngredient) {
+    super();
     this.id = values.id;
     this.name = values.name;
     this.calories = values.calories;
@@ -43,5 +46,19 @@ export class Ingredient {
     this.brand = values.brand;
     this.macros = values.macros;
     this.createdAt = new Date(values.createdAt);
+  }
+
+  serialize() {
+    return {
+      id: this.id,
+      name: this.name,
+      calories: this.calories,
+      servingSize: this.servingSize,
+      servingUnit: this.servingUnit,
+      store: this.store,
+      brand: this.brand,
+      macros: this.macros,
+      createdAt: this.createdAt.toISOString(),
+    };
   }
 }

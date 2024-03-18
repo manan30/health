@@ -4,6 +4,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Variables, Env } from "~/types";
 import { eq } from "db";
 import { Ingredient } from "./models/ingredient";
+import { SearchIngredientsResponse } from "./responses/search-ingredient";
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
   "/ingredients"
@@ -18,6 +19,23 @@ app.get("/", async (c) => {
 
   const ingredients = ingredientsValues.map(
     (ingredient) => new Ingredient(ingredient)
+  );
+
+  return c.json(ingredients);
+});
+
+app.get("/search", async (c) => {
+  const db = c.get("db");
+  // const query = c.req.query("q");
+
+  const ingredientsValues = await db.query.ingredient.findMany({
+    // where: (ingredients, { contains }) =>
+    //   contains(ingredients.name, name as string),
+    orderBy: (ingredients, { asc }) => [asc(ingredients.name)],
+  });
+
+  const ingredients = ingredientsValues.map((ingredient) =>
+    new SearchIngredientsResponse(ingredient).serialize()
   );
 
   return c.json(ingredients);

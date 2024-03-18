@@ -1,4 +1,4 @@
-import { RecipesSelectModel } from "db";
+import { RecipeIngredientsSelectModel, RecipesSelectModel } from "db";
 
 export interface Ingredient {
   id: number;
@@ -18,4 +18,6 @@ export interface Ingredient {
   createdAt: Date;
 }
 
-export type Recipe = RecipesSelectModel;
+export type Recipe = RecipesSelectModel & {
+  recipeIngredients: RecipeIngredientsSelectModel[];
+};
