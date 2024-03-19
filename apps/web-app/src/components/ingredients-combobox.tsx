@@ -31,7 +31,7 @@ export function IngredientsCombobox({ onSelect }: IngredientsComboboxProps) {
     query === ""
       ? data ?? []
       : data?.filter((ing) => {
-          const ingredient = `${ing.name}${ing.store ? `-${ing.store}` : ""}-${ing.brand ? `-${ing.brand}` : ""}`;
+          const ingredient = `${ing.name}${ing.store && ing.store.length > 0 ? `-${ing.store}` : ""}${ing.brand && ing.brand.length > 0 ? `-${ing.brand}` : ""}`;
           return ingredient.toLowerCase().includes(query.toLowerCase());
         }) ?? [];
 
@@ -54,7 +54,7 @@ export function IngredientsCombobox({ onSelect }: IngredientsComboboxProps) {
           displayValue={(value) => {
             const ing = data?.find((ing) => ing.id === value);
             if (!ing) return "";
-            return `${ing.name}${ing.store && ing.store.trim().length > 0 ? `-${ing.store}` : ""}-${ing.brand && ing.brand.trim().length > 0 ? `-${ing.brand}` : ""}`;
+            return `${ing.name}${ing.store && ing.store.length > 0 ? `-${ing.store}` : ""}${ing.brand && ing.brand.length > 0 ? `-${ing.brand}` : ""}`;
           }}
         />
         <Transition
@@ -89,7 +89,7 @@ export function IngredientsCombobox({ onSelect }: IngredientsComboboxProps) {
                           <CheckIcon className="h-5 w-5" aria-hidden="true" />
                         </span>
                       ) : null}
-                      {`${ing.name}${ing.store && ing.store.trim().length > 0 ? `-${ing.store}` : ""}-${ing.brand && ing.brand.trim().length > 0 ? `-${ing.brand}` : ""}`}
+                      {`${ing.name}${ing.store && ing.store.length > 0 ? `-${ing.store}` : ""}${ing.brand && ing.brand.length > 0 ? `-${ing.brand}` : ""}`}
                     </div>
                   )}
                 </Combobox.Option>
