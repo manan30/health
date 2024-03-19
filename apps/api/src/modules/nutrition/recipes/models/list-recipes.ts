@@ -6,10 +6,12 @@ import {
 import { BaseModel } from "~/core/models";
 
 interface SerializedRecipe {
+  id: number;
   name: string;
   totalCalories: number;
   totalWeight: number;
   completed: boolean;
+  createdAt: string;
 }
 
 type RecipeIngredient = RecipeIngredientsSelectModel & {
@@ -31,10 +33,12 @@ export class ListRecipes extends BaseModel<SerializedRecipe[]> {
   serialize() {
     return this.recipes.map((recipe) => {
       return {
+        id: recipe.id,
         name: recipe.name,
         totalCalories: Number(recipe.totalCalories),
         totalWeight: Number(recipe.totalWeight),
         completed: recipe.completed,
+        createdAt: recipe.createdAt,
       };
     });
   }

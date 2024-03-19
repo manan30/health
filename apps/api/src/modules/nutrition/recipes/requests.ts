@@ -16,3 +16,5 @@ export const createRecipeRequest = z.object({
     )
     .nonempty("Ingredients must have at least 1 item"),
 });
+
+export const deleteRecipeRequest = z.object({ id: z.string() });

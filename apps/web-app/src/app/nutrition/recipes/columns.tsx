@@ -12,6 +12,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Recipe } from "~/models";
 import { useState } from "react";
+import { DeleteRecipeAlert } from "./delete-recipe-alert";
 
 export const columns: ColumnDef<Recipe>[] = [
   {
@@ -29,10 +30,22 @@ export const columns: ColumnDef<Recipe>[] = [
   {
     accessorKey: "totalCalories",
     header: "Total Calories",
+    cell: ({ row }) => Number(row.original.totalCalories).toFixed(2),
   },
   {
     accessorKey: "totalWeight",
     header: "Total Quantity",
+    cell: ({ row }) => Number(row.original.totalCalories).toFixed(2),
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Created date",
+    cell: ({ row }) =>
+      Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }).format(new Date(row.original.createdAt)),
   },
   {
     id: "actions",
@@ -58,20 +71,20 @@ export const columns: ColumnDef<Recipe>[] = [
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="text-green-800 hover:bg-green-200 hover:text-destructive-foreground focus:bg-destructive/10 focus:text-destructive cursor-pointer text-xs"
+                className="text-destructive hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive/10 focus:text-destructive cursor-pointer text-xs"
                 onClick={() => {
                   setShowDeleteAlert(true);
                 }}
               >
-                Mark Completed
+                Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {/* <DeleteIngredientAlert
+          <DeleteRecipeAlert
             setOpen={setShowDeleteAlert}
             open={showDeleteAlert}
             id={row.original.id}
-          /> */}
+          />
         </>
       );
     },

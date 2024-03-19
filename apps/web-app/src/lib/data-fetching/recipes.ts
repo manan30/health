@@ -27,3 +27,9 @@ export async function createRecipe(body: CreateRecipeBody) {
     method: "POST",
   });
 }
+
+export async function deleteRecipe(id: number) {
+  return fetchInstance(`/${id}`, {
+    method: "DELETE",
+  });
+}

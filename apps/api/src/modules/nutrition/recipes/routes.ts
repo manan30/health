@@ -1,9 +1,10 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { Variables, Env } from "~/types";
-import { createRecipeRequest } from "./requests";
+import { createRecipeRequest, deleteRecipeRequest } from "./requests";
 import { ListRecipes } from "./models/list-recipes";
 import { CreateRecipeResponse } from "./responses/create-recipe";
+import { eq } from "db";
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
   "/recipes"
@@ -29,6 +30,7 @@ app.get("/", async (c) => {
   return c.json(new ListRecipes(recipes).serialize());
 });
 
+// todo: request updated other recipes with same name as well
 app.post("/", zValidator("json", createRecipeRequest), async (c) => {
   const db = c.get("db");
   const schema = c.get("schema");
@@ -185,28 +187,23 @@ app.post("/", zValidator("json", createRecipeRequest), async (c) => {
 //   }
 // );
 
-// app.delete(
-//   "/:id",
-//   zValidator("param", z.object({ id: z.string() })),
-//   async (c) => {
-//     const db = c.get("db");
-//     const schema = c.get("schema");
-//     const id = c.req.param("id");
+app.delete("/:id", zValidator("param", deleteRecipeRequest), async (c) => {
+  const db = c.get("db");
+  const schema = c.get("schema");
+  // todo: request does not get validated
+  const { id } = c.req.valid("param");
 
-//     const ingredient = await db.query.ingredient.findFirst({
-//       where: (ingredients, { eq }) => eq(ingredients.id, Number(id)),
-//     });
+  const recipe = await db.query.recipe.findFirst({
+    where: (recipes, { eq }) => eq(recipes.id, Number(id)),
+  });
 
-//     if (!ingredient) {
-//       return c.newResponse("Ingredient not found", 404);
-//     }
+  if (!recipe) {
+    return c.newResponse("Recipe not found", 404);
+  }
 
-//     await db
-//       .delete(schema.ingredient)
-//       .where(eq(schema.ingredient.id, Number(id)));
+  await db.delete(schema.recipe).where(eq(schema.recipe.id, Number(id)));
 
-//     return c.newResponse(null, 204);
-//   }
-// );
+  return c.newResponse(null, 204);
+});
 
 export const recipeRoutes = app;
