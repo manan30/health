@@ -18,3 +18,4 @@ export const createRecipeRequest = z.object({
 });
 
 export const deleteRecipeRequest = z.object({ id: z.string() });
+export const toggleCompletionRecipeRequest = z.object({ id: z.string() });

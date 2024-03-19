@@ -33,3 +33,9 @@ export async function deleteRecipe(id: number) {
     method: "DELETE",
   });
 }
+
+export async function markCompleteRecipe(id: number) {
+  return fetchInstance(`toggle-completion/${id}`, {
+    method: "PUT",
+  });
+}

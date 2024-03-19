@@ -13,6 +13,8 @@ import {
 import { Recipe } from "~/models";
 import { useState } from "react";
 import { DeleteRecipeAlert } from "./delete-recipe-alert";
+import { ToggleCompletionRecipeAlert } from "./toggle-completion-recipe-alert";
+import { cn } from "~/lib/utils";
 
 export const columns: ColumnDef<Recipe>[] = [
   {
@@ -38,6 +40,22 @@ export const columns: ColumnDef<Recipe>[] = [
     cell: ({ row }) => Math.ceil(Number(row.original.totalWeight)),
   },
   {
+    accessorKey: "completed",
+    header: "Complete",
+    cell: ({ row }) => (
+      <span
+        className={cn(
+          "text-xs px-2 py-1 rounded-md",
+          row.original.completed
+            ? "bg-green-100 text-green-800"
+            : "bg-secondary text-primary"
+        )}
+      >
+        {row.original.completed ? "Yes" : "No"}
+      </span>
+    ),
+  },
+  {
     accessorKey: "createdAt",
     header: "Created date",
     cell: ({ row }) =>
@@ -51,6 +69,8 @@ export const columns: ColumnDef<Recipe>[] = [
     id: "actions",
     cell: ({ row }) => {
       const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+      const [showToggleCompletionAlert, setShowToggleCompletionAlert] =
+        useState(false);
 
       return (
         <>
@@ -71,7 +91,19 @@ export const columns: ColumnDef<Recipe>[] = [
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="text-destructive hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive/10 focus:text-destructive cursor-pointer text-xs"
+                className={cn(
+                  "cursor-pointer text-xs",
+                  !row.original.completed &&
+                    "text-green-800 focus:bg-green-100 focus:text-green-800"
+                )}
+                onClick={() => {
+                  setShowToggleCompletionAlert(true);
+                }}
+              >
+                {row.original.completed ? "Mark In Progress" : "Mark Completed"}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer text-xs"
                 onClick={() => {
                   setShowDeleteAlert(true);
                 }}
@@ -84,6 +116,12 @@ export const columns: ColumnDef<Recipe>[] = [
             setOpen={setShowDeleteAlert}
             open={showDeleteAlert}
             id={row.original.id}
+          />
+          <ToggleCompletionRecipeAlert
+            setOpen={setShowToggleCompletionAlert}
+            open={showToggleCompletionAlert}
+            id={row.original.id}
+            isComplete={row.original.completed}
           />
         </>
       );

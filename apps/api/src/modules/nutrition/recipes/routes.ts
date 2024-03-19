@@ -1,7 +1,11 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { Variables, Env } from "~/types";
-import { createRecipeRequest, deleteRecipeRequest } from "./requests";
+import {
+  createRecipeRequest,
+  deleteRecipeRequest,
+  toggleCompletionRecipeRequest,
+} from "./requests";
 import { ListRecipes } from "./models/list-recipes";
 import { CreateRecipeResponse } from "./responses/create-recipe";
 import { eq } from "db";
@@ -203,5 +207,33 @@ app.delete("/:id", zValidator("param", deleteRecipeRequest), async (c) => {
 
   return c.newResponse(null, 204);
 });
+
+app.put(
+  "/toggle-completion/:id",
+  zValidator("param", toggleCompletionRecipeRequest),
+  async (c) => {
+    const db = c.get("db");
+    const schema = c.get("schema");
+    const { id } = c.req.valid("param");
+
+    const recipe = await db.query.recipe.findFirst({
+      where: (recipes, { eq }) => eq(recipes.id, Number(id)),
+    });
+
+    if (!recipe) {
+      return c.newResponse("Recipe not found", 404);
+    }
+
+    await db
+      .update(schema.recipe)
+      .set({
+        completed: !recipe.completed,
+      })
+      .where(eq(schema.recipe.id, Number(id)))
+      .returning();
+
+    return c.newResponse(null, 204);
+  }
+);
 
 export const recipeRoutes = app;
