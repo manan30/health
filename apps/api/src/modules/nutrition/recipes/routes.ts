@@ -21,6 +21,7 @@ app.get("/", async (c) => {
         },
       },
     },
+    orderBy: (recipes, { desc }) => desc(recipes.createdAt),
   });
 
   if (!recipes) {
@@ -36,7 +37,7 @@ app.post("/", zValidator("json", createRecipeRequest), async (c) => {
   const schema = c.get("schema");
   const body = c.req.valid("json");
 
-  const recipe = await db
+  const [recipe] = await db
     .insert(schema.recipe)
     .values({
       name: body.name,
@@ -48,37 +49,34 @@ app.post("/", zValidator("json", createRecipeRequest), async (c) => {
 
   await db.insert(schema.recipeIngredient).values(
     body.ingredients.map((ingredient) => ({
-      recipeId: recipe[0].id,
+      recipeId: recipe.id,
       ingredientId: ingredient.id,
       quantity: `${ingredient.quantity}`,
     }))
   );
 
-  const createdRecipe = await db.query.recipe.findFirst({
-    where: (recipes, { eq }) => eq(recipes.id, recipe[0].id),
+  const recipeIngredients = await db.query.recipeIngredient.findMany({
+    where: (recipeIngredients, { eq }) =>
+      eq(recipeIngredients.recipeId, recipe.id),
     with: {
-      recipeIngredients: {
-        with: {
-          ingredient: true,
-        },
-      },
+      ingredient: true,
     },
   });
 
-  if (!createdRecipe) {
+  if (!recipeIngredients) {
     return c.newResponse("Recipe not found", 404);
   }
 
   let totalCalories = 0;
   let totalWeight = 0;
 
-  for (const recipeIngredient of createdRecipe.recipeIngredients) {
-    const { ingredient } = recipeIngredient;
+  for (const recipeIngredient of recipeIngredients) {
+    const { ingredient, quantity } = recipeIngredient;
     const { calories, servingSize } = ingredient;
     const unitCalories = calories / servingSize;
-    const ingredientCalories = unitCalories * Number(recipeIngredient.quantity);
+    const ingredientCalories = unitCalories * Number(quantity);
     totalCalories += ingredientCalories;
-    totalWeight += Number(recipeIngredient.quantity);
+    totalWeight += Number(quantity);
   }
 
   await db.update(schema.recipe).set({
@@ -87,7 +85,7 @@ app.post("/", zValidator("json", createRecipeRequest), async (c) => {
   });
 
   const updatedRecipe = await db.query.recipe.findFirst({
-    where: (recipes, { eq }) => eq(recipes.id, recipe[0].id),
+    where: (recipes, { eq }) => eq(recipes.id, recipe.id),
   });
 
   if (!updatedRecipe) {

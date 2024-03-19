@@ -30,12 +30,12 @@ export const columns: ColumnDef<Recipe>[] = [
   {
     accessorKey: "totalCalories",
     header: "Total Calories",
-    cell: ({ row }) => Number(row.original.totalCalories).toFixed(2),
+    cell: ({ row }) => Math.ceil(Number(row.original.totalCalories)),
   },
   {
     accessorKey: "totalWeight",
     header: "Total Quantity",
-    cell: ({ row }) => Number(row.original.totalCalories).toFixed(2),
+    cell: ({ row }) => Math.ceil(Number(row.original.totalWeight)),
   },
   {
     accessorKey: "createdAt",
