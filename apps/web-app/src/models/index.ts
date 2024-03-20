@@ -21,3 +21,16 @@ export interface Ingredient {
 export type Recipe = RecipesSelectModel & {
   recipeIngredients: RecipeIngredientsSelectModel[];
 };
+
+export type GetRecipeResponse = {
+  id: number;
+  name: string;
+  totalCalories: string;
+  totalWeight: string;
+  completed: boolean;
+  recipeIngredients: {
+    id: number;
+    ingredientId: number;
+    quantity: string;
+  }[];
+};

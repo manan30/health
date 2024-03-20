@@ -19,19 +19,25 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Recipe } from "~/models";
 import { IngredientsCombobox } from "~/components/ingredients-combobox";
 import { createRecipe } from "~/lib/data-fetching/recipes";
 
 type RecipeFormProps = {
   isNew?: boolean;
-  recipe: Recipe | null;
+  recipe: {
+    id: number;
+    name: string;
+    recipeIngredients: {
+      ingredientId: number;
+      quantity: string;
+    }[];
+  } | null;
 };
 
 type FormValues = {
   name: string;
   ingredients: {
-    id: number | null;
+    ingId: number | null;
     quantity: number | null;
   }[];
 };
@@ -71,22 +77,16 @@ export function RecipeForm({ isNew, recipe }: RecipeFormProps) {
   );
 }
 
-function InnerForm({
-  recipe,
-  isNew,
-}: {
-  recipe: Recipe | null;
-  isNew?: boolean;
-}) {
+function InnerForm({ recipe }: RecipeFormProps) {
   const router = useRouter();
-  const { handleSubmit, register, formState, setValue, watch, control } =
+  const { handleSubmit, register, formState, setValue, control } =
     useForm<FormValues>({
       defaultValues: {
         name: recipe?.name || "",
         ingredients: recipe?.recipeIngredients.map((ing) => ({
-          id: ing.ingredientId,
+          ingId: ing.ingredientId,
           quantity: Number(ing.quantity),
-        })) || [{ id: null, quantity: null }],
+        })) || [{ ingId: null, quantity: null }],
       },
     });
   const { fields, append, remove } = useFieldArray({
@@ -101,7 +101,13 @@ function InnerForm({
       if (recipe) {
         // return updateIngredient(ingredient.id, arg);
       }
-      return createRecipe(arg);
+      return createRecipe({
+        ...arg,
+        ingredients: arg.ingredients.map((ing) => ({
+          id: ing.ingId,
+          quantity: ing.quantity,
+        })),
+      });
     },
     {
       onSuccess: async () => {
@@ -149,15 +155,16 @@ function InnerForm({
             />
           </div>
           <h3 className="font-medium">Ingredients</h3>
-          {fields.map((_field, id) => (
-            <div className="flex items-end gap-2">
+          {fields.map((field, id) => (
+            <div key={id} className="flex items-end gap-2">
               <div className="grid gap-1.5 flex-1 shrink-0">
                 <Label className="text-sm" htmlFor="serving-unit">
                   Name
                 </Label>
                 <IngredientsCombobox
+                  id={field.ingId}
                   onSelect={(ingredient) => {
-                    setValue(`ingredients.${id}.id`, ingredient);
+                    setValue(`ingredients.${id}.ingId`, ingredient);
                   }}
                 />
               </div>
@@ -195,7 +202,7 @@ function InnerForm({
                 variant="link"
                 className="w-fit content-end p-0"
                 onClick={() => {
-                  append({ id: null, quantity: null });
+                  append({ ingId: null, quantity: null });
                 }}
                 type="button"
               >

@@ -9,6 +9,7 @@ import {
 import { ListRecipes } from "./models/list-recipes";
 import { CreateRecipeResponse } from "./responses/create-recipe";
 import { eq } from "db";
+import { GetRecipeResponse } from "./models/get-recipe";
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
   "/recipes"
@@ -83,10 +84,13 @@ app.post("/", zValidator("json", createRecipeRequest), async (c) => {
     totalWeight += Number(quantity);
   }
 
-  await db.update(schema.recipe).set({
-    totalCalories: `${totalCalories}`,
-    totalWeight: `${totalWeight}`,
-  });
+  await db
+    .update(schema.recipe)
+    .set({
+      totalCalories: `${totalCalories}`,
+      totalWeight: `${totalWeight}`,
+    })
+    .where(eq(schema.recipe.id, recipe.id));
 
   const updatedRecipe = await db.query.recipe.findFirst({
     where: (recipes, { eq }) => eq(recipes.id, recipe.id),
@@ -97,6 +101,24 @@ app.post("/", zValidator("json", createRecipeRequest), async (c) => {
   }
 
   return c.json(new CreateRecipeResponse(updatedRecipe).serialize());
+});
+
+app.get("/:id", async (c) => {
+  const db = c.get("db");
+  const id = c.req.param("id");
+
+  const recipe = await db.query.recipe.findFirst({
+    where: (recipes, { eq }) => eq(recipes.id, Number(id)),
+    with: {
+      recipeIngredients: true,
+    },
+  });
+
+  if (!recipe) {
+    return c.newResponse("Recipe not found", 404);
+  }
+
+  return c.json(new GetRecipeResponse(recipe).serialize());
 });
 
 // app.get("/:id", async (c) => {
@@ -229,8 +251,7 @@ app.put(
       .set({
         completed: !recipe.completed,
       })
-      .where(eq(schema.recipe.id, Number(id)))
-      .returning();
+      .where(eq(schema.recipe.id, Number(id)));
 
     return c.newResponse(null, 204);
   }

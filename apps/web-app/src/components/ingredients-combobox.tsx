@@ -9,10 +9,14 @@ import { Input } from "./ui/input";
 import { cn } from "~/lib/utils";
 
 type IngredientsComboboxProps = {
+  id: number | null;
   onSelect: (ingredient: number | null) => void;
 };
 
-export function IngredientsCombobox({ onSelect }: IngredientsComboboxProps) {
+export function IngredientsCombobox({
+  id,
+  onSelect,
+}: IngredientsComboboxProps) {
   const { data, isLoading, isValidating } = useSWR(
     ["ingredients", "search"],
     async () => await searchIngredients(),
@@ -22,7 +26,7 @@ export function IngredientsCombobox({ onSelect }: IngredientsComboboxProps) {
     }
   );
 
-  const [ingredient, setIngredient] = React.useState<number | null>(null);
+  const [ingredient, setIngredient] = React.useState<number | null>(id);
   const [query, setQuery] = React.useState("");
 
   const loading = isLoading || isValidating;
@@ -38,6 +42,10 @@ export function IngredientsCombobox({ onSelect }: IngredientsComboboxProps) {
   React.useEffect(() => {
     onSelect(ingredient);
   }, [ingredient]);
+
+  React.useEffect(() => {
+    setIngredient(id);
+  }, [id]);
 
   return (
     <Combobox

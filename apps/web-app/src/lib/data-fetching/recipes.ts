@@ -1,5 +1,5 @@
 import { ofetch as fetch } from "ofetch";
-import { Recipe } from "~/models";
+import { GetRecipeResponse, Recipe } from "~/models";
 import { BASE_API_URL } from "./constants";
 
 export type CreateRecipeBody = {
@@ -37,5 +37,11 @@ export async function deleteRecipe(id: number) {
 export async function markCompleteRecipe(id: number) {
   return fetchInstance(`toggle-completion/${id}`, {
     method: "PUT",
+  });
+}
+
+export async function getRecipeById(id: number) {
+  return fetchInstance<GetRecipeResponse>(`/${id}`, {
+    method: "GET",
   });
 }

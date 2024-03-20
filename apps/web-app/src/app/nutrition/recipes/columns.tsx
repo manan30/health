@@ -85,7 +85,7 @@ export const columns: ColumnDef<Recipe>[] = [
               <DropdownMenuItem asChild>
                 <Link
                   className="cursor-pointer text-xs"
-                  href={`/nutrition/ingredients/${row.original.id}`}
+                  href={`/nutrition/recipes/${row.original.id}`}
                 >
                   Edit
                 </Link>
