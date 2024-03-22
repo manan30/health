@@ -24,6 +24,7 @@ app.get("/", async (c) => {
       recipeIngredients: {
         with: {
           ingredient: true,
+          recipeAsIngredient: true,
         },
       },
     },
@@ -47,8 +48,8 @@ app.post("/", zValidator("json", createOrUpdateRecipeRequest), async (c) => {
     .insert(schema.recipe)
     .values({
       name: body.name,
-      totalCalories: 0,
-      totalWeight: 0,
+      totalCalories: "0",
+      totalWeight: "0",
       completed: false,
     })
     .returning();

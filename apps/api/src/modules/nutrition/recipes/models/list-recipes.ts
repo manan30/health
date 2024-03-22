@@ -15,11 +15,12 @@ interface SerializedRecipe {
 }
 
 type RecipeIngredient = RecipeIngredientsSelectModel & {
-  ingredient: IngredientsSelectModel;
+  ingredient: IngredientsSelectModel | null;
+  recipeAsIngredient: RecipesSelectModel | null;
 };
 
 export type IRecipe = RecipesSelectModel & {
-  recipeIngredients: RecipeIngredient[];
+  recipeIngredients: RecipeIngredient[] | null;
 };
 
 export class ListRecipes extends BaseModel<SerializedRecipe[]> {

@@ -21,5 +21,8 @@ export const recipe = pgTable('recipe', {
 });
 
 export const recipeRelations = relations(recipe, ({ many }) => ({
-  recipeIngredients: many(recipeIngredient),
+  recipeIngredients: many(recipeIngredient, { relationName: 'recipe' }),
+  recipeAsIngredients: many(recipeIngredient, {
+    relationName: 'recipeAsIngredient',
+  }),
 }));
