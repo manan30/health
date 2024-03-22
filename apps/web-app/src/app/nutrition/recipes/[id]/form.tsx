@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Loader2, PlusCircle, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FetchError } from "ofetch";
@@ -20,7 +21,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { IngredientsCombobox } from "~/components/ingredients-combobox";
-import { createRecipe } from "~/lib/data-fetching/recipes";
+import { createRecipe, updateRecipe } from "~/lib/data-fetching/recipes";
 
 type RecipeFormProps = {
   isNew?: boolean;
@@ -98,22 +99,27 @@ function InnerForm({ recipe }: RecipeFormProps) {
   const { trigger } = useSWRMutation(
     "createRecipe",
     (_url, { arg }: { arg: FormValues }) => {
-      if (recipe) {
-        // return updateIngredient(ingredient.id, arg);
-      }
-      return createRecipe({
+      const values = {
         ...arg,
         ingredients: arg.ingredients.map((ing) => ({
           id: ing.ingId,
           quantity: ing.quantity,
         })),
-      });
+      };
+      if (recipe) {
+        return updateRecipe(recipe.id, values);
+      }
+      return createRecipe(values);
     },
     {
       onSuccess: async () => {
         router.push("/nutrition/recipes");
         router.refresh();
-        toast.success("New Recipe added successfully");
+        toast.success(
+          recipe
+            ? "Recipe updated successfully"
+            : "New Recipe added successfully"
+        );
       },
       onError: (error) => {
         if (error instanceof FetchError) {
@@ -134,10 +140,22 @@ function InnerForm({ recipe }: RecipeFormProps) {
   return (
     <form
       className="px-1"
-      onSubmit={handleSubmit(async (data) => {
-        setError(null);
-        await trigger(data);
-      })}
+      onSubmit={handleSubmit(
+        async (data) => {
+          setError(null);
+          await trigger(data);
+        },
+        (errors) => {
+          setError(
+            Object.entries(errors).map(
+              ([key, value]) =>
+                value.message ||
+                value.root?.message ||
+                `${key}: ${value.root?.type}`
+            )
+          );
+        }
+      )}
     >
       <div className="grid gap-4 pb-4">
         <div className="grid gap-4">
@@ -188,7 +206,7 @@ function InnerForm({ recipe }: RecipeFormProps) {
                 variant="link"
                 className="ml-auto p-0 text-destructive"
                 onClick={() => {
-                  if (fields.length > 1) remove(id);
+                  if (fields.length > 1 || recipe) remove(id);
                 }}
                 type="button"
               >
@@ -196,21 +214,19 @@ function InnerForm({ recipe }: RecipeFormProps) {
               </Button>
             </div>
           ))}
-          {fields.length ? (
-            <div className="flex justify-end w-full">
-              <Button
-                variant="link"
-                className="w-fit content-end p-0"
-                onClick={() => {
-                  append({ ingId: null, quantity: null });
-                }}
-                type="button"
-              >
-                <PlusCircle className="h-4 w-4 mr-2" />
-                Add Ingredient
-              </Button>
-            </div>
-          ) : null}
+          <div className="flex justify-end w-full">
+            <Button
+              variant="link"
+              className="w-fit content-end p-0"
+              onClick={() => {
+                append({ ingId: null, quantity: null });
+              }}
+              type="button"
+            >
+              <PlusCircle className="h-4 w-4 mr-2" />
+              Add Ingredient
+            </Button>
+          </div>
         </div>
       </div>
       {error ? (

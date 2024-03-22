@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,11 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
-import {
-  usePathname,
-  useSelectedLayoutSegment,
-  useSelectedLayoutSegments,
-} from "next/navigation";
+import { useSelectedLayoutSegments } from "next/navigation";
 
 export function Breadcrumbs() {
   const selectedLayoutSegments = useSelectedLayoutSegments();
@@ -37,7 +33,7 @@ export function Breadcrumbs() {
         </BreadcrumbItem>
         {paths.map((path, idx) => {
           return (
-            <>
+            <React.Fragment key={path.segment}>
               <BreadcrumbItem className="capitalize">
                 {idx !== paths.length - 1 ? (
                   <BreadcrumbLink href={path.href}>
@@ -48,31 +44,10 @@ export function Breadcrumbs() {
                 )}
               </BreadcrumbItem>
               {idx !== paths.length - 1 ? <BreadcrumbSeparator /> : null}
-            </>
+            </React.Fragment>
           );
         })}
       </BreadcrumbList>
-      {/* //{" "}
-      <BreadcrumbList>
-        //{" "}
-        <BreadcrumbItem>
-          // <BreadcrumbLink href="/">Home</BreadcrumbLink>
-          //{" "}
-        </BreadcrumbItem>
-        // <BreadcrumbSeparator />
-        //{" "}
-        <BreadcrumbItem>
-          // <BreadcrumbLink href="/components">Components</BreadcrumbLink>
-          //{" "}
-        </BreadcrumbItem>
-        // <BreadcrumbSeparator />
-        //{" "}
-        <BreadcrumbItem>
-          // <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-          //{" "}
-        </BreadcrumbItem>
-        //{" "}
-      </BreadcrumbList> */}
     </Breadcrumb>
   );
 }

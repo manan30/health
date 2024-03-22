@@ -16,3 +16,5 @@ export default async function IngredientPage({
 
   return <IngredientForm isNew={isNew} ingredient={ingredient} />;
 }
+
+export const dynamic = "force-dynamic";

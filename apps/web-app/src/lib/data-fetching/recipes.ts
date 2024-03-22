@@ -45,3 +45,10 @@ export async function getRecipeById(id: number) {
     method: "GET",
   });
 }
+
+export async function updateRecipe(id: number, body: CreateRecipeBody) {
+  return fetchInstance<Recipe>(`/${id}`, {
+    body,
+    method: "PUT",
+  });
+}

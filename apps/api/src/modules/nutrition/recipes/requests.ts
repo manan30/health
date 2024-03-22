@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const createRecipeRequest = z.object({
+export const createOrUpdateRecipeRequest = z.object({
   name: z
     .string({
       required_error: "Name is a required field",
@@ -17,5 +17,8 @@ export const createRecipeRequest = z.object({
     .nonempty("Ingredients must have at least 1 item"),
 });
 
+export const getRecipeRequest = z.object({ id: z.string() });
+
 export const deleteRecipeRequest = z.object({ id: z.string() });
+
 export const toggleCompletionRecipeRequest = z.object({ id: z.string() });

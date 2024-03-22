@@ -32,3 +32,5 @@ export default async function RecipePage({
     />
   );
 }
+
+export const dynamic = "force-dynamic";
