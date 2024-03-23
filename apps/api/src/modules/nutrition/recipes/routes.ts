@@ -165,10 +165,12 @@ app.put(
       where: (recipeIngredients, { eq }) =>
         eq(recipeIngredients.recipeId, Number(id)),
     });
-    const receivedIngredientsIds = body.ingredients.map((ing) => ing.id);
+    const receivedIngredientsIds = body.items
+      .map((item) => item.itemId)
+      .filter(Boolean);
 
     const deletedIngredients = recipeIngredients.filter(
-      (recipeIng) => !receivedIngredientsIds.includes(recipeIng.ingredientId)
+      (recipeIng) => !receivedIngredientsIds.includes(recipeIng.id)
     );
 
     let deletedRecipeIngredients: { id: number }[] = [];
@@ -184,27 +186,30 @@ app.put(
         .returning({ id: schema.recipeIngredient.id });
     }
 
-    const filteredReceivedIngredients = body.ingredients.filter(
-      (ing) => !deletedRecipeIngredients.find((delIng) => delIng.id === ing.id)
+    const filteredReceivedIngredients = body.items.filter(
+      (ing) =>
+        !deletedRecipeIngredients.find((delIng) => delIng.id === ing.itemId)
     );
 
     for (const ing of filteredReceivedIngredients) {
-      const { id, quantity } = ing;
-      const existingIngredient = recipeIngredients.find(
-        (recipeIng) => recipeIng.ingredientId === id
+      const { id, quantity, itemId, type } = ing;
+      const existingRecipeIngredient = recipeIngredients.find(
+        (recipeIng) => recipeIng.id === itemId
       );
 
-      if (existingIngredient) {
-        if (Number(existingIngredient.quantity) === Number(quantity)) continue;
+      if (existingRecipeIngredient) {
+        if (Number(existingRecipeIngredient.quantity) === Number(quantity))
+          continue;
         await db
           .update(schema.recipeIngredient)
           .set({
             quantity: `${quantity}`,
           })
-          .where(eq(schema.recipeIngredient.id, existingIngredient.id));
+          .where(eq(schema.recipeIngredient.id, existingRecipeIngredient.id));
       } else {
         await db.insert(schema.recipeIngredient).values({
-          ingredientId: id,
+          ingredientId: type === "ingredient" ? id : null,
+          recipeAsIngredientId: type === "recipe" ? id : null,
           quantity: `${quantity}`,
           recipeId: recipe.id,
         });
@@ -216,6 +221,7 @@ app.put(
         eq(recipeIngredients.recipeId, recipe.id),
       with: {
         ingredient: true,
+        recipeAsIngredient: true,
       },
     });
 
@@ -227,9 +233,15 @@ app.put(
     let totalWeight = 0;
 
     for (const recipeIngredient of updatedRecipeIngredients) {
-      const { ingredient, quantity } = recipeIngredient;
-      const { calories, servingSize } = ingredient;
-      const unitCalories = calories / servingSize;
+      const { ingredient, quantity, recipeAsIngredient } = recipeIngredient;
+      let unitCalories = 0;
+      if (ingredient) {
+        const { calories, servingSize } = ingredient;
+        unitCalories = calories / servingSize;
+      } else if (recipeAsIngredient) {
+        const { totalCalories, totalWeight } = recipeAsIngredient;
+        unitCalories = Number(totalCalories) / Number(totalWeight);
+      }
       const ingredientCalories = unitCalories * Number(quantity);
       totalCalories += ingredientCalories;
       totalWeight += Number(quantity);

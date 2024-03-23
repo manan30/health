@@ -248,7 +248,7 @@ function InnerForm({ recipe }: RecipeFormProps) {
                   itemId: null,
                   quantity: null,
                   recipeIngId: null,
-                  type: ItemType.Ingredient,
+                  type: ItemType.Recipe,
                 });
               }}
               type="button"
@@ -264,7 +264,7 @@ function InnerForm({ recipe }: RecipeFormProps) {
                   itemId: null,
                   quantity: null,
                   recipeIngId: null,
-                  type: ItemType.Recipe,
+                  type: ItemType.Ingredient,
                 });
               }}
               type="button"
