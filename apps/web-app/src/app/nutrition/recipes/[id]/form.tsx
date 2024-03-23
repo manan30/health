@@ -199,6 +199,7 @@ function InnerForm({ recipe }: RecipeFormProps) {
                     onSelect={(ingredient) => {
                       setValue(`items.${id}.itemId`, ingredient);
                     }}
+                    disabled={formState.isSubmitting}
                   />
                 ) : null}
                 {(field.itemId || field.itemId === null) &&
@@ -208,6 +209,7 @@ function InnerForm({ recipe }: RecipeFormProps) {
                     onSelect={(recipe) => {
                       setValue(`items.${id}.itemId`, recipe);
                     }}
+                    disabled={formState.isSubmitting}
                   />
                 ) : null}
               </div>

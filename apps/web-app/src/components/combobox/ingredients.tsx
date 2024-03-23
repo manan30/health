@@ -9,11 +9,13 @@ import { CheckIcon } from "lucide-react";
 type IngredientsComboboxProps = {
   val: number | null;
   onSelect: (ingredient: number | null) => void;
+  disabled?: boolean;
 };
 
 export function IngredientsCombobox({
   onSelect,
   val,
+  disabled,
 }: IngredientsComboboxProps) {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [value, setValue] = React.useState<number | null>(null);
@@ -47,7 +49,7 @@ export function IngredientsCombobox({
     <BaseCombobox
       value={value}
       setValue={setValue}
-      disabled={isLoading || isValidating}
+      disabled={isLoading || isValidating || disabled}
       setDisplayValue={(value) => {
         const ing = data?.find((ing) => ing.id === value);
         if (!ing) return "";

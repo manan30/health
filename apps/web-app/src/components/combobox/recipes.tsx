@@ -10,6 +10,7 @@ import { searchRecipes } from "~/lib/data-fetching/recipes";
 type RecipesComboboxProps = {
   val: number | null;
   onSelect: (recipe: number | null) => void;
+  disabled?: boolean;
 };
 
 function formatDate(date: string) {
@@ -18,7 +19,11 @@ function formatDate(date: string) {
   }).format(new Date(date));
 }
 
-export function RecipesCombobox({ onSelect, val }: RecipesComboboxProps) {
+export function RecipesCombobox({
+  onSelect,
+  val,
+  disabled,
+}: RecipesComboboxProps) {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [value, setValue] = React.useState<number | null>(null);
 
@@ -50,7 +55,7 @@ export function RecipesCombobox({ onSelect, val }: RecipesComboboxProps) {
     <BaseCombobox
       value={value}
       setValue={setValue}
-      disabled={isLoading || isValidating}
+      disabled={isLoading || isValidating || disabled}
       setDisplayValue={(value) => {
         const recipe = data?.find((recipe) => recipe.id === value);
         if (!recipe) return "";
