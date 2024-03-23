@@ -111,7 +111,9 @@ function InnerForm({
     });
   const [error, setError] = useState<string | string[] | null>(null);
   const { trigger } = useSWRMutation(
-    "createIngredient",
+    [ingredient ? "update" : "create", "ingredient", ingredient?.id].filter(
+      Boolean
+    ),
     (_url, { arg }: { arg: FormValues }) => {
       if (ingredient) {
         return updateIngredient(ingredient.id, arg);

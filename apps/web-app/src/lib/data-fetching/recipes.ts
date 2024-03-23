@@ -2,11 +2,17 @@ import { ofetch as fetch } from "ofetch";
 import { GetRecipeResponse, Recipe } from "~/models";
 import { BASE_API_URL } from "./constants";
 
-export type CreateRecipeBody = {
+export enum ItemType {
+  Recipe = "recipe",
+  Ingredient = "ingredient",
+}
+
+export type CreateOrUpdateRecipeBody = {
   name: string;
-  ingredients: {
+  items: {
     id: number | null;
     quantity: number | null;
+    type: ItemType;
   }[];
 };
 
@@ -27,7 +33,7 @@ export async function getAllRecipes() {
   return fetchInstance<Recipe[]>("");
 }
 
-export async function createRecipe(body: CreateRecipeBody) {
+export async function createRecipe(body: CreateOrUpdateRecipeBody) {
   return fetchInstance<Recipe>("", {
     body,
     method: "POST",
@@ -52,7 +58,7 @@ export async function getRecipeById(id: number) {
   });
 }
 
-export async function updateRecipe(id: number, body: CreateRecipeBody) {
+export async function updateRecipe(id: number, body: CreateOrUpdateRecipeBody) {
   return fetchInstance<Recipe>(`/${id}`, {
     body,
     method: "PUT",

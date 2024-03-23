@@ -7,11 +7,12 @@ export const createOrUpdateRecipeRequest = z.object({
       invalid_type_error: "Name must be a string",
     })
     .min(1, "Name must be at least 1 character long"),
-  ingredients: z
+  items: z
     .array(
       z.object({
         id: z.number(),
         quantity: z.number(),
+        type: z.enum(["recipe", "ingredient"]),
       })
     )
     .nonempty("Ingredients must have at least 1 item"),

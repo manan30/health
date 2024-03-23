@@ -20,7 +20,11 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { createRecipe, updateRecipe } from "~/lib/data-fetching/recipes";
+import {
+  ItemType,
+  createRecipe,
+  updateRecipe,
+} from "~/lib/data-fetching/recipes";
 import { IngredientsCombobox } from "~/components/combobox/ingredients";
 import { RecipesCombobox } from "~/components/combobox/recipes";
 
@@ -38,10 +42,10 @@ type RecipeFormProps = {
 
 type FormValues = {
   name: string;
-  ingredients: {
+  items: {
+    itemId: number | null;
     quantity: number | null;
-    ingId?: number | null;
-    recipeId?: number | null;
+    type: ItemType;
   }[];
 };
 
@@ -86,26 +90,29 @@ function InnerForm({ recipe }: RecipeFormProps) {
     useForm<FormValues>({
       defaultValues: {
         name: recipe?.name || "",
-        ingredients: recipe?.recipeIngredients.map((ing) => ({
-          ingId: ing.ingredientId,
-          quantity: Number(ing.quantity),
-        })) || [{ ingId: null, quantity: null }],
+        // items:
+        //   recipe?.recipeIngredients.map((ing) => ({
+        //     ingId: ing.ingredientId,
+        //     quantity: Number(ing.quantity),
+        //   })) || [],
+        items: [],
       },
     });
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "ingredients",
+    name: "items",
     rules: { minLength: 1, required: true },
   });
   const [error, setError] = useState<string | string[] | null>(null);
   const { trigger } = useSWRMutation(
-    "createRecipe",
+    [recipe ? "update" : "create", "ingredient", recipe?.id].filter(Boolean),
     (_url, { arg }: { arg: FormValues }) => {
       const values = {
         ...arg,
-        ingredients: arg.ingredients.map((ing) => ({
-          id: ing.ingId,
-          quantity: ing.quantity,
+        items: arg.items.map((item) => ({
+          id: item.itemId,
+          quantity: item.quantity,
+          type: item.type,
         })),
       };
       if (recipe) {
@@ -181,19 +188,21 @@ function InnerForm({ recipe }: RecipeFormProps) {
                 <Label className="text-sm" htmlFor="serving-unit">
                   Name
                 </Label>
-                {field.ingId || field.ingId === null ? (
+                {(field.itemId || field.itemId === null) &&
+                field.type === ItemType.Ingredient ? (
                   <IngredientsCombobox
-                    val={field.ingId}
+                    val={field.itemId}
                     onSelect={(ingredient) => {
-                      setValue(`ingredients.${id}.ingId`, ingredient);
+                      setValue(`items.${id}.itemId`, ingredient);
                     }}
                   />
                 ) : null}
-                {field.recipeId || field.recipeId === null ? (
+                {(field.itemId || field.itemId === null) &&
+                field.type === ItemType.Recipe ? (
                   <RecipesCombobox
-                    val={field.recipeId}
+                    val={field.itemId}
                     onSelect={(recipe) => {
-                      setValue(`ingredients.${id}.recipeId`, recipe);
+                      setValue(`items.${id}.itemId`, recipe);
                     }}
                   />
                 ) : null}
@@ -208,7 +217,7 @@ function InnerForm({ recipe }: RecipeFormProps) {
                   required
                   type="tel"
                   disabled={formState.isSubmitting}
-                  {...register(`ingredients.${id}.quantity`, {
+                  {...register(`items.${id}.quantity`, {
                     required: true,
                     valueAsNumber: true,
                   })}
@@ -231,7 +240,11 @@ function InnerForm({ recipe }: RecipeFormProps) {
               variant="link"
               className="w-fit content-end p-0"
               onClick={() => {
-                append({ recipeId: null, quantity: null });
+                append({
+                  itemId: null,
+                  quantity: null,
+                  type: ItemType.Ingredient,
+                });
               }}
               type="button"
             >
@@ -242,7 +255,11 @@ function InnerForm({ recipe }: RecipeFormProps) {
               variant="link"
               className="w-fit content-end p-0"
               onClick={() => {
-                append({ ingId: null, quantity: null });
+                append({
+                  itemId: null,
+                  quantity: null,
+                  type: ItemType.Recipe,
+                });
               }}
               type="button"
             >
