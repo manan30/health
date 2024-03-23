@@ -22,6 +22,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { createRecipe, updateRecipe } from "~/lib/data-fetching/recipes";
 import { IngredientsCombobox } from "~/components/combobox/ingredients";
+import { RecipesCombobox } from "~/components/combobox/recipes";
 
 type RecipeFormProps = {
   isNew?: boolean;
@@ -38,8 +39,9 @@ type RecipeFormProps = {
 type FormValues = {
   name: string;
   ingredients: {
-    ingId: number | null;
     quantity: number | null;
+    ingId?: number | null;
+    recipeId?: number | null;
   }[];
 };
 
@@ -179,12 +181,22 @@ function InnerForm({ recipe }: RecipeFormProps) {
                 <Label className="text-sm" htmlFor="serving-unit">
                   Name
                 </Label>
-                <IngredientsCombobox
-                  val={field.ingId}
-                  onSelect={(ingredient) => {
-                    setValue(`ingredients.${id}.ingId`, ingredient);
-                  }}
-                />
+                {field.ingId || field.ingId === null ? (
+                  <IngredientsCombobox
+                    val={field.ingId}
+                    onSelect={(ingredient) => {
+                      setValue(`ingredients.${id}.ingId`, ingredient);
+                    }}
+                  />
+                ) : null}
+                {field.recipeId || field.recipeId === null ? (
+                  <RecipesCombobox
+                    val={field.recipeId}
+                    onSelect={(recipe) => {
+                      setValue(`ingredients.${id}.recipeId`, recipe);
+                    }}
+                  />
+                ) : null}
               </div>
               <div className="grid gap-1.5 w-[5.5rem]">
                 <Label className="text-sm" htmlFor="name">
@@ -214,7 +226,18 @@ function InnerForm({ recipe }: RecipeFormProps) {
               </Button>
             </div>
           ))}
-          <div className="flex justify-end w-full">
+          <div className="flex justify-start w-full space-x-3">
+            <Button
+              variant="link"
+              className="w-fit content-end p-0"
+              onClick={() => {
+                append({ recipeId: null, quantity: null });
+              }}
+              type="button"
+            >
+              <PlusCircle className="h-4 w-4 mr-2" />
+              Add Recipe
+            </Button>
             <Button
               variant="link"
               className="w-fit content-end p-0"

@@ -11,6 +11,7 @@ import { ListRecipes } from "./models/list-recipes";
 import { CreateRecipeResponse } from "./responses/create-recipe";
 import { eq, inArray } from "db";
 import { GetRecipeResponse } from "./models/get-recipe";
+import { SearchRecipesResponse } from "./responses/search-recipe";
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
   "/recipes"
@@ -38,7 +39,6 @@ app.get("/", async (c) => {
   return c.json(new ListRecipes(recipes).serialize());
 });
 
-// todo: request updated other recipes with same name as well
 app.post("/", zValidator("json", createOrUpdateRecipeRequest), async (c) => {
   const db = c.get("db");
   const schema = c.get("schema");
@@ -103,6 +103,21 @@ app.post("/", zValidator("json", createOrUpdateRecipeRequest), async (c) => {
   }
 
   return c.json(new CreateRecipeResponse(updatedRecipe).serialize());
+});
+
+app.get("/search", async (c) => {
+  const db = c.get("db");
+  // const { searchTerm } = c.req.query;
+
+  const recipes = await db.query.recipe.findMany({
+    // where: (ingredients, { contains }) =>
+    //   contains(ingredients.name, name as string),
+    orderBy: (recipes, { desc }) => [desc(recipes.createdAt)],
+  });
+
+  return c.json(
+    recipes.map((recipe) => new SearchRecipesResponse(recipe).serialize())
+  );
 });
 
 app.get("/:id", async (c) => {

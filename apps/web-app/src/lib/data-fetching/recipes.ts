@@ -10,6 +10,12 @@ export type CreateRecipeBody = {
   }[];
 };
 
+type SearchRecipe = {
+  id: number;
+  name: string;
+  createdAt: string;
+};
+
 export const fetchInstance = fetch.create({
   baseURL: `${BASE_API_URL}/nutrition/recipes`,
   headers: {
@@ -51,4 +57,8 @@ export async function updateRecipe(id: number, body: CreateRecipeBody) {
     body,
     method: "PUT",
   });
+}
+
+export async function searchRecipes(query: string = "") {
+  return fetchInstance<SearchRecipe[]>(`/search?q=${query}`);
 }

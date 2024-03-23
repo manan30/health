@@ -11,6 +11,9 @@ type BaseComboboxProps<T> = {
   setValue: (value: T | null) => void;
   setSearchTerm: (query: string) => void;
   setDisplayValue: (value: T) => string;
+  comboboxInputProps?: {
+    placeholder?: string;
+  };
 };
 
 export function BaseCombobox<T>({
@@ -20,6 +23,7 @@ export function BaseCombobox<T>({
   children,
   value,
   setValue,
+  comboboxInputProps,
 }: BaseComboboxProps<T>) {
   return (
     <Combobox nullable value={value} onChange={setValue} disabled={disabled}>
@@ -29,6 +33,7 @@ export function BaseCombobox<T>({
           placeholder="Search for an ingredient"
           as={Input}
           displayValue={setDisplayValue}
+          {...comboboxInputProps}
         />
         <Transition
           as={React.Fragment}

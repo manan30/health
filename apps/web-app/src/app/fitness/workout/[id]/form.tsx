@@ -3,7 +3,6 @@
 import React from "react";
 import useSWRMutation from "swr/mutation";
 import { useForm } from "react-hook-form";
-// import { DevTool } from "@hookform/devtools";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Exercise } from "./exercise";

@@ -28,17 +28,17 @@ app.get("/search", async (c) => {
   const db = c.get("db");
   // const query = c.req.query("q");
 
-  const ingredientsValues = await db.query.ingredient.findMany({
+  const ingredients = await db.query.ingredient.findMany({
     // where: (ingredients, { contains }) =>
     //   contains(ingredients.name, name as string),
     orderBy: (ingredients, { asc }) => [asc(ingredients.name)],
   });
 
-  const ingredients = ingredientsValues.map((ingredient) =>
-    new SearchIngredientsResponse(ingredient).serialize()
+  return c.json(
+    ingredients.map((ingredient) =>
+      new SearchIngredientsResponse(ingredient).serialize()
+    )
   );
-
-  return c.json(ingredients);
 });
 
 app.get("/:id", async (c) => {
