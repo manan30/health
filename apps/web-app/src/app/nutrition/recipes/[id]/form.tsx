@@ -20,8 +20,8 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { IngredientsCombobox } from "~/components/ingredients-combobox";
 import { createRecipe, updateRecipe } from "~/lib/data-fetching/recipes";
+import { IngredientsCombobox } from "~/components/combobox/ingredients";
 
 type RecipeFormProps = {
   isNew?: boolean;
@@ -180,7 +180,7 @@ function InnerForm({ recipe }: RecipeFormProps) {
                   Name
                 </Label>
                 <IngredientsCombobox
-                  id={field.ingId}
+                  val={field.ingId}
                   onSelect={(ingredient) => {
                     setValue(`ingredients.${id}.ingId`, ingredient);
                   }}
