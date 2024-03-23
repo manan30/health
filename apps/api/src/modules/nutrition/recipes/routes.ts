@@ -21,14 +21,6 @@ app.get("/", async (c) => {
   const db = c.get("db");
 
   const recipes = await db.query.recipe.findMany({
-    with: {
-      recipeIngredients: {
-        with: {
-          ingredient: true,
-          recipeAsIngredient: true,
-        },
-      },
-    },
     orderBy: (recipes, { desc }) => desc(recipes.createdAt),
   });
 
@@ -55,10 +47,11 @@ app.post("/", zValidator("json", createOrUpdateRecipeRequest), async (c) => {
     .returning();
 
   await db.insert(schema.recipeIngredient).values(
-    body.ingredients.map((ingredient) => ({
+    body.items.map((item) => ({
       recipeId: recipe.id,
-      ingredientId: ingredient.id,
-      quantity: `${ingredient.quantity}`,
+      ingredientId: item.type === "ingredient" ? item.id : null,
+      recipeAsIngredientId: item.type === "recipe" ? item.id : null,
+      quantity: `${item.quantity}`,
     }))
   );
 
@@ -67,6 +60,7 @@ app.post("/", zValidator("json", createOrUpdateRecipeRequest), async (c) => {
       eq(recipeIngredients.recipeId, recipe.id),
     with: {
       ingredient: true,
+      recipeAsIngredient: true,
     },
   });
 
@@ -78,9 +72,15 @@ app.post("/", zValidator("json", createOrUpdateRecipeRequest), async (c) => {
   let totalWeight = 0;
 
   for (const recipeIngredient of recipeIngredients) {
-    const { ingredient, quantity } = recipeIngredient;
-    const { calories, servingSize } = ingredient;
-    const unitCalories = calories / servingSize;
+    const { ingredient, quantity, recipeAsIngredient } = recipeIngredient;
+    let unitCalories = 0;
+    if (ingredient) {
+      const { calories, servingSize } = ingredient;
+      unitCalories = calories / servingSize;
+    } else if (recipeAsIngredient) {
+      const { totalCalories, totalWeight } = recipeAsIngredient;
+      unitCalories = Number(totalCalories) / Number(totalWeight);
+    }
     const ingredientCalories = unitCalories * Number(quantity);
     totalCalories += ingredientCalories;
     totalWeight += Number(quantity);
@@ -127,7 +127,12 @@ app.get("/:id", async (c) => {
   const recipe = await db.query.recipe.findFirst({
     where: (recipes, { eq }) => eq(recipes.id, Number(id)),
     with: {
-      recipeIngredients: true,
+      recipeIngredients: {
+        with: {
+          ingredient: true,
+          recipeAsIngredient: true,
+        },
+      },
     },
   });
 

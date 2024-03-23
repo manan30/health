@@ -19,9 +19,7 @@ type RecipeIngredient = RecipeIngredientsSelectModel & {
   recipeAsIngredient: RecipesSelectModel | null;
 };
 
-export type IRecipe = RecipesSelectModel & {
-  recipeIngredients: RecipeIngredient[] | null;
-};
+export type IRecipe = RecipesSelectModel;
 
 export class ListRecipes extends BaseModel<SerializedRecipe[]> {
   recipes: IRecipe[];

@@ -15,7 +15,7 @@ export const createOrUpdateRecipeRequest = z.object({
         type: z.enum(["recipe", "ingredient"]),
       })
     )
-    .nonempty("Ingredients must have at least 1 item"),
+    .nonempty("Items must have at least 1 item"),
 });
 
 export const getRecipeRequest = z.object({ id: z.string() });

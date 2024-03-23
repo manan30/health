@@ -34,8 +34,10 @@ type RecipeFormProps = {
     id: number;
     name: string;
     recipeIngredients: {
-      ingredientId: number;
+      id: number;
+      itemId: number;
       quantity: string;
+      type: ItemType;
     }[];
   } | null;
 };
@@ -46,6 +48,7 @@ type FormValues = {
     itemId: number | null;
     quantity: number | null;
     type: ItemType;
+    recipeIngId: number | null;
   }[];
 };
 
@@ -90,12 +93,12 @@ function InnerForm({ recipe }: RecipeFormProps) {
     useForm<FormValues>({
       defaultValues: {
         name: recipe?.name || "",
-        // items:
-        //   recipe?.recipeIngredients.map((ing) => ({
-        //     ingId: ing.ingredientId,
-        //     quantity: Number(ing.quantity),
-        //   })) || [],
-        items: [],
+        items:
+          recipe?.recipeIngredients.map((ing) => ({
+            itemId: ing.itemId,
+            quantity: Number(ing.quantity),
+            type: ing.type,
+          })) || [],
       },
     });
   const { fields, append, remove } = useFieldArray({
@@ -113,6 +116,7 @@ function InnerForm({ recipe }: RecipeFormProps) {
           id: item.itemId,
           quantity: item.quantity,
           type: item.type,
+          recipeIngId: item.recipeIngId,
         })),
       };
       if (recipe) {
@@ -243,6 +247,7 @@ function InnerForm({ recipe }: RecipeFormProps) {
                 append({
                   itemId: null,
                   quantity: null,
+                  recipeIngId: null,
                   type: ItemType.Ingredient,
                 });
               }}
@@ -258,6 +263,7 @@ function InnerForm({ recipe }: RecipeFormProps) {
                 append({
                   itemId: null,
                   quantity: null,
+                  recipeIngId: null,
                   type: ItemType.Recipe,
                 });
               }}

@@ -1,5 +1,5 @@
 import { ofetch as fetch } from "ofetch";
-import { GetRecipeResponse, Recipe } from "~/models";
+import { Recipe } from "~/models";
 import { BASE_API_URL } from "./constants";
 
 export enum ItemType {
@@ -13,10 +13,23 @@ export type CreateOrUpdateRecipeBody = {
     id: number | null;
     quantity: number | null;
     type: ItemType;
+    recipeIngId: number | null;
   }[];
 };
 
-type SearchRecipe = {
+export type GetRecipeResponse = {
+  id: number;
+  name: string;
+  completed: boolean;
+  recipeIngredients: {
+    id: number;
+    itemId: number;
+    quantity: string;
+    type: ItemType;
+  }[];
+};
+
+export type SearchRecipe = {
   id: number;
   name: string;
   createdAt: string;

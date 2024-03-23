@@ -14,23 +14,7 @@ export default async function RecipePage({
     recipe = await getRecipeById(Number(params.id));
   }
 
-  return (
-    <RecipeForm
-      isNew={isNew}
-      recipe={
-        recipe
-          ? {
-              id: recipe?.id,
-              name: recipe?.name,
-              recipeIngredients: recipe?.recipeIngredients.map((ri) => ({
-                ingredientId: ri.ingredientId,
-                quantity: ri.quantity,
-              })),
-            }
-          : null
-      }
-    />
-  );
+  return <RecipeForm isNew={isNew} recipe={recipe ?? null} />;
 }
 
 export const dynamic = "force-dynamic";

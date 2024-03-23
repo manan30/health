@@ -1,21 +1,34 @@
-import { RecipeIngredientsSelectModel, RecipesSelectModel } from "db";
+import {
+  IngredientsSelectModel,
+  RecipeIngredientsSelectModel,
+  RecipesSelectModel,
+} from "db";
 import { BaseModel } from "~/core/models";
+
+enum ItemType {
+  Recipe = "recipe",
+  Ingredient = "ingredient",
+}
 
 type SerializedGetRecipeResponse = {
   id: number;
   name: string;
-  totalCalories: string;
-  totalWeight: string;
   completed: boolean;
   recipeIngredients: {
     id: number;
-    ingredientId: number;
+    itemId: number;
     quantity: string;
+    type: ItemType;
   }[];
 };
 
+type RecipeIngredients = RecipeIngredientsSelectModel & {
+  ingredients?: IngredientsSelectModel[];
+  recipeAsIngredients?: RecipesSelectModel[];
+};
+
 type Recipe = RecipesSelectModel & {
-  recipeIngredients: RecipeIngredientsSelectModel[];
+  recipeIngredients: RecipeIngredients[];
 };
 
 export class GetRecipeResponse extends BaseModel<SerializedGetRecipeResponse> {
@@ -30,14 +43,16 @@ export class GetRecipeResponse extends BaseModel<SerializedGetRecipeResponse> {
     return {
       id: this.recipe.id,
       name: this.recipe.name,
-      totalCalories: this.recipe.totalCalories,
-      totalWeight: this.recipe.totalWeight,
       completed: this.recipe.completed,
       recipeIngredients: this.recipe.recipeIngredients.map(
         (recipeIngredient) => ({
           id: recipeIngredient.id,
-          ingredientId: recipeIngredient.ingredientId,
           quantity: recipeIngredient.quantity,
+          itemId: (recipeIngredient.recipeAsIngredientId ??
+            recipeIngredient.ingredientId) as number,
+          type: recipeIngredient.recipeAsIngredientId
+            ? ItemType.Recipe
+            : ItemType.Ingredient,
         })
       ),
     };
