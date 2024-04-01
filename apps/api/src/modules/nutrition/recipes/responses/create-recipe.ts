@@ -1,9 +1,9 @@
 import { RecipesSelectModel } from "db";
-import { BaseModel } from "~/core/models";
+import { BaseResponse } from "~/core/response";
 
 type Recipe = { id: number };
 
-export class CreateRecipeResponse extends BaseModel<Recipe> {
+export class CreateRecipeResponse extends BaseResponse<Recipe> {
   id: number;
 
   constructor(values: Recipe) {

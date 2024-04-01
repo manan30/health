@@ -3,7 +3,7 @@ import {
   RecipeIngredientsSelectModel,
   IngredientsSelectModel,
 } from "db";
-import { BaseModel } from "~/core/models";
+import { BaseResponse } from "~/core/response";
 
 interface SerializedRecipe {
   id: number;
@@ -21,7 +21,7 @@ type RecipeIngredient = RecipeIngredientsSelectModel & {
 
 export type IRecipe = RecipesSelectModel;
 
-export class ListRecipes extends BaseModel<SerializedRecipe[]> {
+export class ListRecipes extends BaseResponse<SerializedRecipe[]> {
   recipes: IRecipe[];
 
   constructor(recipes: IRecipe[]) {

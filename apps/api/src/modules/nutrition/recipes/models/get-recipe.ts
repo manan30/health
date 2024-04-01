@@ -3,7 +3,7 @@ import {
   RecipeIngredientsSelectModel,
   RecipesSelectModel,
 } from "db";
-import { BaseModel } from "~/core/models";
+import { BaseResponse } from "~/core/response";
 
 enum ItemType {
   Recipe = "recipe",
@@ -31,7 +31,7 @@ type Recipe = RecipesSelectModel & {
   recipeIngredients: RecipeIngredients[];
 };
 
-export class GetRecipeResponse extends BaseModel<SerializedGetRecipeResponse> {
+export class GetRecipeResponse extends BaseResponse<SerializedGetRecipeResponse> {
   recipe: Recipe;
 
   constructor(values: Recipe) {

@@ -1,4 +1,4 @@
-import { BaseModel } from "~/core/models";
+import { BaseResponse } from "~/core/response";
 
 export interface IIngredient {
   id: number;
@@ -18,7 +18,7 @@ export interface IIngredient {
   createdAt: string;
 }
 
-export class Ingredient extends BaseModel<IIngredient> {
+export class Ingredient extends BaseResponse<IIngredient> {
   id: number;
   name: string;
   calories: number;

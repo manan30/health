@@ -1,5 +1,5 @@
 import { RecipesSelectModel } from "db";
-import { BaseModel } from "~/core/models";
+import { BaseResponse } from "~/core/response";
 
 type Response = {
   id: number;
@@ -7,7 +7,7 @@ type Response = {
   createdAt: Date;
 };
 
-export class SearchRecipesResponse extends BaseModel<Response> {
+export class SearchRecipesResponse extends BaseResponse<Response> {
   id: number;
   name: string;
   createdAt: Date;

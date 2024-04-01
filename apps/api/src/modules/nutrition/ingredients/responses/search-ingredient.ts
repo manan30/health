@@ -1,4 +1,4 @@
-import { BaseModel } from "~/core/models";
+import { BaseResponse } from "~/core/response";
 
 interface Response {
   id: number;
@@ -7,7 +7,7 @@ interface Response {
   brand: string | null;
 }
 
-export class SearchIngredientsResponse extends BaseModel<Response> {
+export class SearchIngredientsResponse extends BaseResponse<Response> {
   id: number;
   name: string;
   store: string | null;

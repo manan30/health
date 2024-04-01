@@ -3,6 +3,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Variables, Env } from "~/types";
 import { MealItemsSelectModel, eq, inArray } from "db";
 import { createOrUpdateMealRequest } from "./requests";
+import { CreateMealResponse } from "./responses/create-meal";
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
   "/meals"
@@ -40,54 +41,7 @@ app.post("/", zValidator("json", createOrUpdateMealRequest), async (c) => {
     }))
   );
 
-  const recipeIngredients = await db.query.recipeIngredient.findMany({
-    where: (recipeIngredients, { eq }) =>
-      eq(recipeIngredients.recipeId, recipe.id),
-    with: {
-      ingredient: true,
-      recipeAsIngredient: true,
-    },
-  });
-
-  if (!recipeIngredients) {
-    return c.newResponse("Recipe not found", 404);
-  }
-
-  let totalCalories = 0;
-  let totalWeight = 0;
-
-  for (const recipeIngredient of recipeIngredients) {
-    const { ingredient, quantity, recipeAsIngredient } = recipeIngredient;
-    let unitCalories = 0;
-    if (ingredient) {
-      const { calories, servingSize } = ingredient;
-      unitCalories = calories / servingSize;
-    } else if (recipeAsIngredient) {
-      const { totalCalories, totalWeight } = recipeAsIngredient;
-      unitCalories = Number(totalCalories) / Number(totalWeight);
-    }
-    const ingredientCalories = unitCalories * Number(quantity);
-    totalCalories += ingredientCalories;
-    totalWeight += Number(quantity);
-  }
-
-  await db
-    .update(schema.recipe)
-    .set({
-      totalCalories: `${totalCalories}`,
-      totalWeight: `${totalWeight}`,
-    })
-    .where(eq(schema.recipe.id, recipe.id));
-
-  const updatedRecipe = await db.query.recipe.findFirst({
-    where: (recipes, { eq }) => eq(recipes.id, recipe.id),
-  });
-
-  if (!updatedRecipe) {
-    return c.newResponse("Recipe not found", 404);
-  }
-
-  return c.json(new CreateRecipeResponse(updatedRecipe).serialize());
+  return c.json(new CreateMealResponse(meal).serialize());
 });
 
 // app.get("/search", async (c) => {
