@@ -11,6 +11,10 @@ type RecipesComboboxProps = {
   val: number | null;
   onSelect: (recipe: number | null) => void;
   disabled?: boolean;
+  styles?: {
+    optionClassNames?: string;
+    inputClassNames?: string;
+  };
 };
 
 function formatDate(date: string) {
@@ -23,6 +27,7 @@ export function RecipesCombobox({
   onSelect,
   val,
   disabled,
+  styles,
 }: RecipesComboboxProps) {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [value, setValue] = React.useState<number | null>(null);
@@ -62,7 +67,10 @@ export function RecipesCombobox({
         return `${recipe.name} - ${formatDate(recipe.createdAt)}`;
       }}
       setSearchTerm={setSearchTerm}
-      comboboxInputProps={{ placeholder: "Search for a recipe" }}
+      comboboxInputProps={{
+        placeholder: "Search for a recipe",
+        className: styles?.inputClassNames,
+      }}
     >
       {filteredValues.length === 0 && searchTerm !== "" ? (
         <div className="relative cursor-default select-none px-4 py-2 text-gray-700">
@@ -77,7 +85,8 @@ export function RecipesCombobox({
               cn(
                 "relative cursor-default select-none py-2 pl-10 pr-4 text-muted-foreground",
                 active && "bg-primary-foreground text-primary",
-                selected && "bg-primary-foreground text-primary"
+                selected && "bg-primary-foreground text-primary",
+                styles?.optionClassNames
               )
             }
           >

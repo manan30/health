@@ -48,7 +48,7 @@ export function MealForm({ isNew }: MealFormProps) {
       open
       onOpenChange={(open) => {
         if (!open) {
-          router.push("/nutrition/meals");
+          router.back();
         }
       }}
     >

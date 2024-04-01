@@ -60,7 +60,7 @@ export function RecipeForm({ isNew, recipe }: RecipeFormProps) {
       open
       onOpenChange={(open) => {
         if (!open) {
-          router.push("/nutrition/recipes");
+          router.back();
         }
       }}
     >
@@ -126,8 +126,8 @@ function InnerForm({ recipe }: RecipeFormProps) {
     },
     {
       onSuccess: async () => {
-        router.push("/nutrition/recipes");
         router.refresh();
+        router.back();
         toast.success(
           recipe
             ? "Recipe updated successfully"

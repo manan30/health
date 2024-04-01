@@ -13,6 +13,7 @@ type BaseComboboxProps<T> = {
   setDisplayValue: (value: T) => string;
   comboboxInputProps?: {
     placeholder?: string;
+    className?: string;
   };
 };
 

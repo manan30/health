@@ -10,12 +10,17 @@ type IngredientsComboboxProps = {
   val: number | null;
   onSelect: (ingredient: number | null) => void;
   disabled?: boolean;
+  styles?: {
+    optionClassNames?: string;
+    inputClassNames?: string;
+  };
 };
 
 export function IngredientsCombobox({
   onSelect,
   val,
   disabled,
+  styles,
 }: IngredientsComboboxProps) {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [value, setValue] = React.useState<number | null>(null);
@@ -56,6 +61,7 @@ export function IngredientsCombobox({
         return `${ing.name}${ing.store && ing.store.length > 0 ? `-${ing.store}` : ""}${ing.brand && ing.brand.length > 0 ? `-${ing.brand}` : ""}`;
       }}
       setSearchTerm={setSearchTerm}
+      comboboxInputProps={{ className: styles?.inputClassNames }}
     >
       {filteredValues.length === 0 && searchTerm !== "" ? (
         <div className="relative cursor-default select-none px-4 py-2 text-gray-700">
@@ -70,7 +76,8 @@ export function IngredientsCombobox({
               cn(
                 "relative cursor-default select-none py-2 pl-10 pr-4 text-muted-foreground",
                 active && "bg-primary-foreground text-primary",
-                selected && "bg-primary-foreground text-primary"
+                selected && "bg-primary-foreground text-primary",
+                styles?.optionClassNames
               )
             }
           >

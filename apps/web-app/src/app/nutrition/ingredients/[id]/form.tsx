@@ -59,7 +59,7 @@ export function IngredientForm({ isNew, ingredient }: IngredientFormProps) {
       open
       onOpenChange={(open) => {
         if (!open) {
-          router.push("/nutrition/ingredients");
+          router.back();
         }
       }}
     >
@@ -79,20 +79,14 @@ export function IngredientForm({ isNew, ingredient }: IngredientFormProps) {
           </DialogDescription>
         </DialogHeader>
         <div className="min-h-full overflow-auto">
-          <InnerForm ingredient={ingredient} isNew={isNew} />
+          <InnerForm ingredient={ingredient} />
         </div>
       </DialogContent>
     </Dialog>
   );
 }
 
-function InnerForm({
-  ingredient,
-  isNew,
-}: {
-  ingredient: Ingredient | null;
-  isNew?: boolean;
-}) {
+function InnerForm({ ingredient }: { ingredient: Ingredient | null }) {
   const router = useRouter();
   const { handleSubmit, register, formState, setValue, watch } =
     useForm<FormValues>({
@@ -122,8 +116,8 @@ function InnerForm({
     },
     {
       onSuccess: async () => {
-        router.push("/nutrition/ingredients");
         router.refresh();
+        router.back();
         toast.success(
           ingredient
             ? "Ingredient updated successfully"
