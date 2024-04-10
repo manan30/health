@@ -40,11 +40,15 @@ pre-commit:
       root: "apps/api"
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
       run:
-        pnpm biome check --config-path=./apps/api --apply --no-errors-on-unmatched --files-ignore-unknown=true {staged_files} && git update-index --again
+        # TODO: figure out how to use {staged_files}
+        # pnpm biome check --config-path=./apps/api --apply --no-errors-on-unmatched --files-ignore-unknown=true {staged_files} && git update-index --again
+        pnpm biome check --apply --no-errors-on-unmatched --files-ignore-unknown=true {staged_files} && git update-index --again
 
 pre-push:
   commands:
     check:
       root: "apps/api"
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
-      run: pnpm biome check --config-path=./apps/api --no-errors-on-unmatched --files-ignore-unknown=true {push_files}
+      # TODO: figure out how to use {push_files}
+      # run: pnpm biome check --config-path=./apps/api --no-errors-on-unmatched --files-ignore-unknown=true {push_files}
+      run: pnpm biome check --no-errors-on-unmatched --files-ignore-unknown=true .

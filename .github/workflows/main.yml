@@ -27,7 +27,7 @@ jobs:
         uses: ./.github/actions/install
 
       - name: Run lint and format checks
-        run: pnpm biome ci --config-path=./apps/api .
+        run: cd apps/api && pnpm biome ci .
 
       - name: Build
         run: pnpm turbo run build --filter='./apps/api'
