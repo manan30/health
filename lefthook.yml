@@ -47,4 +47,4 @@ pre-push:
     check:
       root: "apps/api"
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
-      run: pnpm biome check --config-path=./apps/api --no-errors-on-unmatched --files-ignore-unknown=true .
+      run: pnpm biome check --config-path=./apps/api --no-errors-on-unmatched --files-ignore-unknown=true {push_files}
