@@ -37,3 +37,8 @@ runs:
       run: |
         pnpm install --recursive
         npm i -g wrangler
+
+    - name: Setup Biome
+      uses: biomejs/setup-biome@v2
+      with:
+          version: latest
