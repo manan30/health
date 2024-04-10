@@ -1,75 +1,75 @@
 import { Hono } from "hono";
-import { Env, Variables } from "~/types";
+import type { Env, Variables } from "~/types";
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 
 app.get("/", async (c) => {
-  const db = c.get("db");
+	const db = c.get("db");
 
-  const workouts = await db.query.workout.findMany({
-    with: { exercises: true },
-    orderBy: (workouts, { asc }) => [asc(workouts.date)],
-  });
+	const workouts = await db.query.workout.findMany({
+		with: { exercises: true },
+		orderBy: (workouts, { asc }) => [asc(workouts.date)],
+	});
 
-  return c.json(workouts);
+	return c.json(workouts);
 });
 
 app.post("/new", async (c) => {
-  const db = c.get("db");
-  const schema = c.get("schema");
-  const body = (await c.req.json()) as {
-    name: string;
-    date: string;
-    exercises?: { name: string; sets: string[] }[];
-  };
+	const db = c.get("db");
+	const schema = c.get("schema");
+	const body = (await c.req.json()) as {
+		name: string;
+		date: string;
+		exercises?: { name: string; sets: string[] }[];
+	};
 
-  // TODO: validate body
+	// TODO: validate body
 
-  const workout = await db
-    .insert(schema.workout)
-    .values({
-      date: body.date,
-      name: body.name,
-    })
-    .returning({ id: schema.workout.id });
+	const workout = await db
+		.insert(schema.workout)
+		.values({
+			date: body.date,
+			name: body.name,
+		})
+		.returning({ id: schema.workout.id });
 
-  // const scrubbedExercises = body.exercises?.filter((exercise) => {
-  //   return (
-  //     !isEmptyString(exercise.name) &&
-  //     exercise.sets.some((set) => !isEmptyString(set))
-  //   );
-  // });
+	// const scrubbedExercises = body.exercises?.filter((exercise) => {
+	//   return (
+	//     !isEmptyString(exercise.name) &&
+	//     exercise.sets.some((set) => !isEmptyString(set))
+	//   );
+	// });
 
-  // if (scrubbedExercises?.length) {
-  //   await db.insert(schema.exercise).values(
-  //     scrubbedExercises.map((exercise) => {
-  //       return {
-  //         name: exercise.name,
-  //         sets: exercise.sets,
-  //         workoutId: workout[0].id,
-  //         date: body.date,
-  //         exerciseTypeId: 1,
-  //       };
-  //     })
-  //   );
-  // }
+	// if (scrubbedExercises?.length) {
+	//   await db.insert(schema.exercise).values(
+	//     scrubbedExercises.map((exercise) => {
+	//       return {
+	//         name: exercise.name,
+	//         sets: exercise.sets,
+	//         workoutId: workout[0].id,
+	//         date: body.date,
+	//         exerciseTypeId: 1,
+	//       };
+	//     })
+	//   );
+	// }
 
-  return c.json({ workoutId: workout[0].id });
+	return c.json({ workoutId: workout[0].id });
 });
 
 app.get("/:id", async (c) => {
-  const db = c.get("db");
-  const id = c.req.param("id");
-  const workout = await db.query.workout.findFirst({
-    where: (workout, { eq }) => eq(workout.id, Number(id)),
-    with: { exercises: true },
-  });
+	const db = c.get("db");
+	const id = c.req.param("id");
+	const workout = await db.query.workout.findFirst({
+		where: (workout, { eq }) => eq(workout.id, Number(id)),
+		with: { exercises: true },
+	});
 
-  if (!workout) {
-    return c.json({ error: "Workout not found" }, 404);
-  }
+	if (!workout) {
+		return c.json({ error: "Workout not found" }, 404);
+	}
 
-  return c.json(workout);
+	return c.json(workout);
 });
 
 export default app;

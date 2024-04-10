@@ -1,11 +1,11 @@
 import { Hono } from "hono";
-import { Env, Variables } from "~/types";
+import type { Env, Variables } from "~/types";
 import { ingredientRoutes } from "./ingredients";
-import { recipeRoutes } from "./recipes";
 import { mealRoutes } from "./meals/routes";
+import { recipeRoutes } from "./recipes";
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
-  "/nutrition"
+	"/nutrition",
 );
 
 app.route("/", ingredientRoutes);

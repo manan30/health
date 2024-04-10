@@ -1,12 +1,12 @@
-import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
-import { Variables, Env } from "~/types";
 import { MealItemsSelectModel, eq, inArray } from "db";
+import { Hono } from "hono";
+import type { Env, Variables } from "~/types";
 import { createOrUpdateMealRequest } from "./requests";
 import { CreateMealResponse } from "./responses/create-meal";
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
-  "/meals"
+	"/meals",
 );
 
 // app.get("/", async (c) => {
@@ -24,24 +24,24 @@ const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
 // });
 
 app.post("/", zValidator("json", createOrUpdateMealRequest), async (c) => {
-  const db = c.get("db");
-  const schema = c.get("schema");
-  const body = c.req.valid("json");
+	const db = c.get("db");
+	const schema = c.get("schema");
+	const body = c.req.valid("json");
 
-  const [meal] = await db.insert(schema.meal).values({}).returning();
+	const [meal] = await db.insert(schema.meal).values({}).returning();
 
-  await db.insert(schema.mealItem).values(
-    body.items.map((item) => ({
-      mealId: meal.id,
-      quantity: `${item.quantity}`,
-      calories: `${item.calories}`,
-      mealType: item.mealType,
-      recipeId: item.recipeId,
-      ingredientId: item.ingredientId,
-    }))
-  );
+	await db.insert(schema.mealItem).values(
+		body.items.map((item) => ({
+			mealId: meal.id,
+			quantity: `${item.quantity}`,
+			calories: `${item.calories}`,
+			mealType: item.mealType,
+			recipeId: item.recipeId,
+			ingredientId: item.ingredientId,
+		})),
+	);
 
-  return c.json(new CreateMealResponse(meal).serialize());
+	return c.json(new CreateMealResponse(meal).serialize());
 });
 
 // app.get("/search", async (c) => {

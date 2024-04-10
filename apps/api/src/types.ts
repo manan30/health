@@ -1,10 +1,10 @@
-import { setupDb, schema } from "db";
+import type { schema, setupDb } from "db";
 
 export type Env = {
-  DATABASE_URL: string;
+	DATABASE_URL: string;
 };
 
 export type Variables = {
-  db: ReturnType<typeof setupDb>;
-  schema: typeof schema;
+	db: ReturnType<typeof setupDb>;
+	schema: typeof schema;
 };
