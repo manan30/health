@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations } from 'drizzle-orm';
 import {
 	jsonb,
 	pgEnum,
@@ -6,19 +6,19 @@ import {
 	real,
 	serial,
 	timestamp,
-} from "drizzle-orm/pg-core";
-import { ingredient } from "./ingredient";
-import { meal } from "./meal";
-import { recipe } from "./recipe";
+} from 'drizzle-orm/pg-core';
+import { ingredient } from './ingredient';
+import { meal } from './meal';
+import { recipe } from './recipe';
 
-export const mealTypeEnum = pgEnum("meal_type", [
-	"breakfast",
-	"lunch",
-	"dinner",
-	"evening-snack",
-	"morning-snack",
-	"afternoon-snack",
-	"anytime",
+export const mealTypeEnum = pgEnum('meal_type', [
+	'breakfast',
+	'lunch',
+	'dinner',
+	'evening-snack',
+	'morning-snack',
+	'afternoon-snack',
+	'anytime',
 ]);
 
 export type Macros = {
@@ -29,17 +29,17 @@ export type Macros = {
 	sugar?: number;
 };
 
-export const log = pgTable("log", {
-	id: serial("id").primaryKey(),
-	date: timestamp("date", { precision: 3, mode: "string" }).notNull(),
-	mealType: mealTypeEnum("meal_type").notNull(),
-	quantity: real("quantity").notNull(),
-	calories: real("calories").notNull(),
-	macros: jsonb("macros").$type<Macros>().default({}),
-	mealId: serial("meal_id"),
-	ingredientId: serial("ingredient_id"),
-	recipeId: serial("recipe_id"),
-	createdAt: timestamp("created_at", { precision: 3, mode: "string" })
+export const log = pgTable('log', {
+	id: serial('id').primaryKey(),
+	date: timestamp('date', { precision: 3, mode: 'string' }).notNull(),
+	mealType: mealTypeEnum('meal_type').notNull(),
+	quantity: real('quantity').notNull(),
+	calories: real('calories').notNull(),
+	macros: jsonb('macros').$type<Macros>().default({}),
+	mealId: serial('meal_id'),
+	ingredientId: serial('ingredient_id'),
+	recipeId: serial('recipe_id'),
+	createdAt: timestamp('created_at', { precision: 3, mode: 'string' })
 		.defaultNow()
 		.notNull(),
 });
