@@ -9,6 +9,7 @@
 			"recommended": true
 		}
 	},
+	"formatter": {},
 	"javascript": {
 		"formatter": {
 			"jsxQuoteStyle": "single",
