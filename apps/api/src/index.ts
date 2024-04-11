@@ -15,11 +15,16 @@ app.use("*", db(), cors());
 app.route("/workouts", workoutRoutes);
 app.route("/", nutritionRoutes);
 
-showRoutes(app);
-
 app.notFound((c) => {
 	return c.text("Nothing to see here!", 404);
 });
+
+app.onError((err, c) => {
+	console.error(`${err}`);
+	return c.text("Internal Server Error", 500);
+});
+
+showRoutes(app);
 
 export default {
 	fetch: app.fetch,

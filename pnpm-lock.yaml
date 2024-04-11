@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@biomejs/biome':
+        specifier: 1.6.4
+        version: 1.6.4
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:packages/eslint-config
@@ -39,15 +42,9 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
-      '@biomejs/biome':
-        specifier: 1.6.4
-        version: 1.6.4
       '@cloudflare/workers-types':
         specifier: ^4.20231218.0
         version: 4.20240117.0
-      lefthook:
-        specifier: ^1.6.9
-        version: 1.6.9
       wrangler:
         specifier: ^3.22.0
         version: 3.25.0

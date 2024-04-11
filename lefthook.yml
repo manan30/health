@@ -37,7 +37,6 @@
 pre-commit:
   commands:
     check:
-      root: "apps/api"
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
       run:
         # TODO: figure out how to use {staged_files}
