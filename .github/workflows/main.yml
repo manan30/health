@@ -23,6 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # TODO: API step always runs when there are changes in the db
       - uses: dorny/paths-filter@v2.2.1
         id: filter
         with:
@@ -53,12 +54,14 @@ jobs:
       - name: Run lint and format checks
         run: cd packages/db && pnpm biome ci .
 
+      # TODO: Fix why migrations are not running
       - name: Run migrations
         run: DATABASE_URL=$DATABASE_URL pnpm db:apply-changes
 
   api:
     name: Run API steps
     runs-on: ubuntu-latest
+    # TODO: update need to also wait for db if the db job was run
     needs: changes
     if: ${{needs.changes.outputs.api == 'true'}}
     steps:
