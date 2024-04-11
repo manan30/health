@@ -8,5 +8,6 @@ pre-commit:
 pre-push:
   commands:
     check:
+      files: "git diff --name-only HEAD~1"
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
-      run: pnpm biome check --no-errors-on-unmatched --files-ignore-unknown=true {push_files}
+      run: ls {push_files} && pnpm biome check --no-errors-on-unmatched --files-ignore-unknown=true {push_files}

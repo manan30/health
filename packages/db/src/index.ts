@@ -8,6 +8,7 @@ export * from './types';
 export { schema };
 
 export function setupDb(dbUrl: string) {
+	console.error({ dbUrl });
 	const sql = neon(dbUrl);
 	const db = drizzle(sql, { schema, logger: true });
 	return db;
