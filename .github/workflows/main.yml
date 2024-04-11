@@ -15,10 +15,6 @@ jobs:
     name: Detect files changes
     runs-on: ubuntu-latest
     timeout-minutes: 2
-    outputs:
-      db: ${{ steps.filter.outputs.db }}
-      api: ${{ steps.filter.outputs.api }}
-      web-app: ${{ steps.filter.outputs.web-app }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
