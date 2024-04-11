@@ -1,17 +1,17 @@
-import { zValidator } from "@hono/zod-validator";
-import { eq } from "db";
-import { Hono } from "hono";
-import { z } from "zod";
-import type { Env, Variables } from "~/types";
-import { Ingredient } from "./models/ingredient";
-import { SearchIngredientsResponse } from "./responses/search-ingredient";
+import { zValidator } from '@hono/zod-validator';
+import { eq } from 'db';
+import { Hono } from 'hono';
+import { z } from 'zod';
+import type { Env, Variables } from '~/types';
+import { Ingredient } from './models/ingredient';
+import { SearchIngredientsResponse } from './responses/search-ingredient';
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
-	"/ingredients",
+	'/ingredients',
 );
 
-app.get("/", async (c) => {
-	const db = c.get("db");
+app.get('/', async (c) => {
+	const db = c.get('db');
 
 	const ingredientsValues = await db.query.ingredient.findMany({
 		orderBy: (ingredients, { asc }) => [asc(ingredients.name)],
@@ -24,8 +24,8 @@ app.get("/", async (c) => {
 	return c.json(ingredients);
 });
 
-app.get("/search", async (c) => {
-	const db = c.get("db");
+app.get('/search', async (c) => {
+	const db = c.get('db');
 	// const query = c.req.query("q");
 
 	const ingredients = await db.query.ingredient.findMany({
@@ -41,50 +41,50 @@ app.get("/search", async (c) => {
 	);
 });
 
-app.get("/:id", async (c) => {
-	const db = c.get("db");
-	const id = c.req.param("id");
+app.get('/:id', async (c) => {
+	const db = c.get('db');
+	const id = c.req.param('id');
 
 	const ingredient = await db.query.ingredient.findFirst({
 		where: (ingredients, { eq }) => eq(ingredients.id, Number(id)),
 	});
 
 	if (!ingredient) {
-		return c.newResponse("Ingredient not found", 404);
+		return c.newResponse('Ingredient not found', 404);
 	}
 
 	return c.json(new Ingredient(ingredient));
 });
 
 app.post(
-	"/",
+	'/',
 	zValidator(
-		"json",
+		'json',
 		z.object({
 			name: z
 				.string({
-					required_error: "Name is a required field",
-					invalid_type_error: "Name must be a string",
+					required_error: 'Name is a required field',
+					invalid_type_error: 'Name must be a string',
 				})
-				.min(1, "Name must be at least 1 character long"),
+				.min(1, 'Name must be at least 1 character long'),
 			calories: z
 				.number({
-					required_error: "Calories is a required field",
-					invalid_type_error: "Calories must be a number",
+					required_error: 'Calories is a required field',
+					invalid_type_error: 'Calories must be a number',
 				})
 				.nonnegative(),
 			servingSize: z
 				.number({
-					required_error: "Serving size is a required field",
-					invalid_type_error: "Serving size must be a number",
+					required_error: 'Serving size is a required field',
+					invalid_type_error: 'Serving size must be a number',
 				})
-				.nonnegative("Serving size must be a non-negative number"),
+				.nonnegative('Serving size must be a non-negative number'),
 			servingUnit: z
 				.string({
-					required_error: "Serving unit is a required field",
-					invalid_type_error: "Serving unit must be a string",
+					required_error: 'Serving unit is a required field',
+					invalid_type_error: 'Serving unit must be a string',
 				})
-				.min(1, "Serving unit must be at least 1 character long"),
+				.min(1, 'Serving unit must be at least 1 character long'),
 			store: z.string().nullable(),
 			brand: z.string().nullable(),
 			protein: z.number().nullable(),
@@ -94,9 +94,9 @@ app.post(
 		}),
 	),
 	async (c) => {
-		const db = c.get("db");
-		const schema = c.get("schema");
-		const body = c.req.valid("json");
+		const db = c.get('db');
+		const schema = c.get('schema');
+		const body = c.req.valid('json');
 
 		const ingredient = await db
 			.insert(schema.ingredient)
@@ -121,34 +121,34 @@ app.post(
 );
 
 app.put(
-	"/:id",
+	'/:id',
 	zValidator(
-		"json",
+		'json',
 		z.object({
 			name: z
 				.string({
-					required_error: "Name is a required field",
-					invalid_type_error: "Name must be a string",
+					required_error: 'Name is a required field',
+					invalid_type_error: 'Name must be a string',
 				})
-				.min(1, "Name must be at least 1 character long"),
+				.min(1, 'Name must be at least 1 character long'),
 			calories: z
 				.number({
-					required_error: "Calories is a required field",
-					invalid_type_error: "Calories must be a number",
+					required_error: 'Calories is a required field',
+					invalid_type_error: 'Calories must be a number',
 				})
 				.nonnegative(),
 			servingSize: z
 				.number({
-					required_error: "Serving size is a required field",
-					invalid_type_error: "Serving size must be a number",
+					required_error: 'Serving size is a required field',
+					invalid_type_error: 'Serving size must be a number',
 				})
-				.nonnegative("Serving size must be a non-negative number"),
+				.nonnegative('Serving size must be a non-negative number'),
 			servingUnit: z
 				.string({
-					required_error: "Serving unit is a required field",
-					invalid_type_error: "Serving unit must be a string",
+					required_error: 'Serving unit is a required field',
+					invalid_type_error: 'Serving unit must be a string',
 				})
-				.min(1, "Serving unit must be at least 1 character long"),
+				.min(1, 'Serving unit must be at least 1 character long'),
 			store: z.string().nullable(),
 			brand: z.string().nullable(),
 			protein: z.number().nullable(),
@@ -158,19 +158,19 @@ app.put(
 		}),
 	),
 	async (c) => {
-		const db = c.get("db");
-		const schema = c.get("schema");
-		const id = c.req.param("id");
+		const db = c.get('db');
+		const schema = c.get('schema');
+		const id = c.req.param('id');
 
 		const ingredient = await db.query.ingredient.findFirst({
 			where: (ingredients, { eq }) => eq(ingredients.id, Number(id)),
 		});
 
 		if (!ingredient) {
-			return c.newResponse("Ingredient not found", 404);
+			return c.newResponse('Ingredient not found', 404);
 		}
 
-		const body = c.req.valid("json");
+		const body = c.req.valid('json');
 
 		const updatedIngredient = await db
 			.update(schema.ingredient)
@@ -196,19 +196,19 @@ app.put(
 );
 
 app.delete(
-	"/:id",
-	zValidator("param", z.object({ id: z.string() })),
+	'/:id',
+	zValidator('param', z.object({ id: z.string() })),
 	async (c) => {
-		const db = c.get("db");
-		const schema = c.get("schema");
-		const id = c.req.param("id");
+		const db = c.get('db');
+		const schema = c.get('schema');
+		const id = c.req.param('id');
 
 		const ingredient = await db.query.ingredient.findFirst({
 			where: (ingredients, { eq }) => eq(ingredients.id, Number(id)),
 		});
 
 		if (!ingredient) {
-			return c.newResponse("Ingredient not found", 404);
+			return c.newResponse('Ingredient not found', 404);
 		}
 
 		await db

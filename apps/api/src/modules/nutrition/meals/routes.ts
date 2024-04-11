@@ -1,12 +1,12 @@
-import { zValidator } from "@hono/zod-validator";
-import { MealItemsSelectModel, eq, inArray } from "db";
-import { Hono } from "hono";
-import type { Env, Variables } from "~/types";
-import { createOrUpdateMealRequest } from "./requests";
-import { CreateMealResponse } from "./responses/create-meal";
+import { zValidator } from '@hono/zod-validator';
+import { MealItemsSelectModel, eq, inArray } from 'db';
+import { Hono } from 'hono';
+import type { Env, Variables } from '~/types';
+import { createOrUpdateMealRequest } from './requests';
+import { CreateMealResponse } from './responses/create-meal';
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
-	"/meals",
+	'/meals',
 );
 
 // app.get("/", async (c) => {
@@ -23,10 +23,10 @@ const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
 //   return c.json(new ListRecipes(recipes).serialize());
 // });
 
-app.post("/", zValidator("json", createOrUpdateMealRequest), async (c) => {
-	const db = c.get("db");
-	const schema = c.get("schema");
-	const body = c.req.valid("json");
+app.post('/', zValidator('json', createOrUpdateMealRequest), async (c) => {
+	const db = c.get('db');
+	const schema = c.get('schema');
+	const body = c.req.valid('json');
 
 	const [meal] = await db.insert(schema.meal).values({}).returning();
 

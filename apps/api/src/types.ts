@@ -1,4 +1,4 @@
-import type { schema, setupDb } from "db";
+import type { schema, setupDb } from 'db';
 
 export type Env = {
 	DATABASE_URL: string;

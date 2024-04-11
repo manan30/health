@@ -2,8 +2,8 @@ import type {
 	IngredientsSelectModel,
 	RecipeIngredientsSelectModel,
 	RecipesSelectModel,
-} from "db";
-import { BaseResponse } from "~/core/response";
+} from 'db';
+import { BaseResponse } from '~/core/response';
 
 interface SerializedRecipe {
 	id: number;

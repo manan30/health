@@ -1,4 +1,4 @@
-import { BaseResponse } from "~/core/response";
+import { BaseResponse } from '~/core/response';
 
 interface Response {
 	id: number;

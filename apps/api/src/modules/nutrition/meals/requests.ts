@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const createOrUpdateMealRequest = z.object({
 	items: z
@@ -8,17 +8,17 @@ export const createOrUpdateMealRequest = z.object({
 				recipeId: z.number().optional(),
 				ingredientId: z.number().optional(),
 				mealType: z.enum([
-					"breakfast",
-					"lunch",
-					"dinner",
-					"evening-snack",
-					"morning-snack",
-					"afternoon-snack",
-					"anytime",
+					'breakfast',
+					'lunch',
+					'dinner',
+					'evening-snack',
+					'morning-snack',
+					'afternoon-snack',
+					'anytime',
 				]),
 				quantity: z.string(),
 				calories: z.string(),
 			}),
 		)
-		.nonempty("Items must have at least 1 item"),
+		.nonempty('Items must have at least 1 item'),
 });
