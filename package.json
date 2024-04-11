@@ -1,24 +1,22 @@
 {
-  "name": "health",
-  "private": true,
-  "scripts": {
-    "build:app": "turbo build --filter web-app",
-    "dev": "pnpm run \"/dev:/\"",
-    "dev:app": "turbo dev --filter web-app",
-    "dev:api": "turbo dev --filter api",
-    "db:apply-changes": "turbo db:push --filter db",
-    "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
-  },
-  "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
-    "@repo/typescript-config": "workspace:*",
-    "lefthook": "^1.6.9",
-    "prettier": "^3.1.1",
-    "turbo": "latest"
-  },
-  "packageManager": "pnpm@8.9.0",
-  "engines": {
-    "node": ">=18"
-  }
+	"name": "health",
+	"private": true,
+	"scripts": {
+		"build:app": "turbo build --filter web-app",
+		"dev": "pnpm run \"/dev:/\"",
+		"dev:app": "turbo dev --filter web-app",
+		"dev:api": "turbo dev --filter api",
+		"db:apply-changes": "turbo db:push --filter db"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.6.4",
+		"@repo/eslint-config": "workspace:*",
+		"@repo/typescript-config": "workspace:*",
+		"lefthook": "^1.6.9",
+		"turbo": "latest"
+	},
+	"packageManager": "pnpm@8.9.0",
+	"engines": {
+		"node": ">=18"
+	}
 }

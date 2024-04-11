@@ -1,4 +1,4 @@
-import { BaseResponse } from "~/core/response";
+import { BaseResponse } from '~/core/response';
 
 type SerializedCreateMealResponse = {
 	id: number;

@@ -1,10 +1,10 @@
-import { Hono } from "hono";
-import type { Env, Variables } from "~/types";
+import { Hono } from 'hono';
+import type { Env, Variables } from '~/types';
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 
-app.get("/", async (c) => {
-	const db = c.get("db");
+app.get('/', async (c) => {
+	const db = c.get('db');
 
 	const workouts = await db.query.workout.findMany({
 		with: { exercises: true },
@@ -14,9 +14,9 @@ app.get("/", async (c) => {
 	return c.json(workouts);
 });
 
-app.post("/new", async (c) => {
-	const db = c.get("db");
-	const schema = c.get("schema");
+app.post('/new', async (c) => {
+	const db = c.get('db');
+	const schema = c.get('schema');
 	const body = (await c.req.json()) as {
 		name: string;
 		date: string;
@@ -57,16 +57,16 @@ app.post("/new", async (c) => {
 	return c.json({ workoutId: workout[0].id });
 });
 
-app.get("/:id", async (c) => {
-	const db = c.get("db");
-	const id = c.req.param("id");
+app.get('/:id', async (c) => {
+	const db = c.get('db');
+	const id = c.req.param('id');
 	const workout = await db.query.workout.findFirst({
 		where: (workout, { eq }) => eq(workout.id, Number(id)),
 		with: { exercises: true },
 	});
 
 	if (!workout) {
-		return c.json({ error: "Workout not found" }, 404);
+		return c.json({ error: 'Workout not found' }, 404);
 	}
 
 	return c.json(workout);

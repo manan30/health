@@ -1,47 +1,47 @@
-import { zValidator } from "@hono/zod-validator";
-import { eq, inArray } from "db";
-import { Hono } from "hono";
-import type { Env, Variables } from "~/types";
-import { GetRecipeResponse } from "./models/get-recipe";
-import { ListRecipes } from "./models/list-recipes";
+import { zValidator } from '@hono/zod-validator';
+import { eq, inArray } from 'db';
+import { Hono } from 'hono';
+import type { Env, Variables } from '~/types';
+import { GetRecipeResponse } from './models/get-recipe';
+import { ListRecipes } from './models/list-recipes';
 import {
 	createOrUpdateRecipeRequest,
 	deleteRecipeRequest,
 	getRecipeRequest,
 	toggleCompletionRecipeRequest,
-} from "./requests";
-import { CreateRecipeResponse } from "./responses/create-recipe";
-import { SearchRecipesResponse } from "./responses/search-recipe";
+} from './requests';
+import { CreateRecipeResponse } from './responses/create-recipe';
+import { SearchRecipesResponse } from './responses/search-recipe';
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>().basePath(
-	"/recipes",
+	'/recipes',
 );
 
-app.get("/", async (c) => {
-	const db = c.get("db");
+app.get('/', async (c) => {
+	const db = c.get('db');
 
 	const recipes = await db.query.recipe.findMany({
 		orderBy: (recipes, { desc }) => desc(recipes.createdAt),
 	});
 
 	if (!recipes) {
-		return c.newResponse("Unable to get recipes", 400);
+		return c.newResponse('Unable to get recipes', 400);
 	}
 
 	return c.json(new ListRecipes(recipes).serialize());
 });
 
-app.post("/", zValidator("json", createOrUpdateRecipeRequest), async (c) => {
-	const db = c.get("db");
-	const schema = c.get("schema");
-	const body = c.req.valid("json");
+app.post('/', zValidator('json', createOrUpdateRecipeRequest), async (c) => {
+	const db = c.get('db');
+	const schema = c.get('schema');
+	const body = c.req.valid('json');
 
 	const [recipe] = await db
 		.insert(schema.recipe)
 		.values({
 			name: body.name,
-			totalCalories: "0",
-			totalWeight: "0",
+			totalCalories: '0',
+			totalWeight: '0',
 			completed: false,
 		})
 		.returning();
@@ -49,8 +49,8 @@ app.post("/", zValidator("json", createOrUpdateRecipeRequest), async (c) => {
 	await db.insert(schema.recipeIngredient).values(
 		body.items.map((item) => ({
 			recipeId: recipe.id,
-			ingredientId: item.type === "ingredient" ? item.id : null,
-			recipeAsIngredientId: item.type === "recipe" ? item.id : null,
+			ingredientId: item.type === 'ingredient' ? item.id : null,
+			recipeAsIngredientId: item.type === 'recipe' ? item.id : null,
 			quantity: `${item.quantity}`,
 		})),
 	);
@@ -65,7 +65,7 @@ app.post("/", zValidator("json", createOrUpdateRecipeRequest), async (c) => {
 	});
 
 	if (!recipeIngredients) {
-		return c.newResponse("Recipe not found", 404);
+		return c.newResponse('Recipe not found', 404);
 	}
 
 	let totalCalories = 0;
@@ -99,14 +99,14 @@ app.post("/", zValidator("json", createOrUpdateRecipeRequest), async (c) => {
 	});
 
 	if (!updatedRecipe) {
-		return c.newResponse("Recipe not found", 404);
+		return c.newResponse('Recipe not found', 404);
 	}
 
 	return c.json(new CreateRecipeResponse(updatedRecipe).serialize());
 });
 
-app.get("/search", async (c) => {
-	const db = c.get("db");
+app.get('/search', async (c) => {
+	const db = c.get('db');
 	// const { searchTerm } = c.req.query;
 
 	const recipes = await db.query.recipe.findMany({
@@ -120,9 +120,9 @@ app.get("/search", async (c) => {
 	);
 });
 
-app.get("/:id", async (c) => {
-	const db = c.get("db");
-	const id = c.req.param("id");
+app.get('/:id', async (c) => {
+	const db = c.get('db');
+	const id = c.req.param('id');
 
 	const recipe = await db.query.recipe.findFirst({
 		where: (recipes, { eq }) => eq(recipes.id, Number(id)),
@@ -137,28 +137,28 @@ app.get("/:id", async (c) => {
 	});
 
 	if (!recipe) {
-		return c.newResponse("Recipe not found", 404);
+		return c.newResponse('Recipe not found', 404);
 	}
 
 	return c.json(new GetRecipeResponse(recipe).serialize());
 });
 
 app.put(
-	"/:id",
-	zValidator("json", createOrUpdateRecipeRequest),
-	zValidator("param", getRecipeRequest),
+	'/:id',
+	zValidator('json', createOrUpdateRecipeRequest),
+	zValidator('param', getRecipeRequest),
 	async (c) => {
-		const db = c.get("db");
-		const schema = c.get("schema");
-		const { id } = c.req.valid("param");
-		const body = c.req.valid("json");
+		const db = c.get('db');
+		const schema = c.get('schema');
+		const { id } = c.req.valid('param');
+		const body = c.req.valid('json');
 
 		const recipe = await db.query.recipe.findFirst({
 			where: (recipes, { eq }) => eq(recipes.id, Number(id)),
 		});
 
 		if (!recipe) {
-			return c.newResponse("Recipe not found", 404);
+			return c.newResponse('Recipe not found', 404);
 		}
 
 		const recipeIngredients = await db.query.recipeIngredient.findMany({
@@ -208,8 +208,8 @@ app.put(
 					.where(eq(schema.recipeIngredient.id, existingRecipeIngredient.id));
 			} else {
 				await db.insert(schema.recipeIngredient).values({
-					ingredientId: type === "ingredient" ? id : null,
-					recipeAsIngredientId: type === "recipe" ? id : null,
+					ingredientId: type === 'ingredient' ? id : null,
+					recipeAsIngredientId: type === 'recipe' ? id : null,
 					quantity: `${quantity}`,
 					recipeId: recipe.id,
 				});
@@ -226,7 +226,7 @@ app.put(
 		});
 
 		if (!updatedRecipeIngredients) {
-			return c.newResponse("Recipe not found", 404);
+			return c.newResponse('Recipe not found', 404);
 		}
 
 		let totalCalories = 0;
@@ -261,18 +261,18 @@ app.put(
 	},
 );
 
-app.delete("/:id", zValidator("param", deleteRecipeRequest), async (c) => {
-	const db = c.get("db");
-	const schema = c.get("schema");
+app.delete('/:id', zValidator('param', deleteRecipeRequest), async (c) => {
+	const db = c.get('db');
+	const schema = c.get('schema');
 	// todo: request does not get validated
-	const { id } = c.req.valid("param");
+	const { id } = c.req.valid('param');
 
 	const recipe = await db.query.recipe.findFirst({
 		where: (recipes, { eq }) => eq(recipes.id, Number(id)),
 	});
 
 	if (!recipe) {
-		return c.newResponse("Recipe not found", 404);
+		return c.newResponse('Recipe not found', 404);
 	}
 
 	await db.delete(schema.recipe).where(eq(schema.recipe.id, Number(id)));
@@ -281,19 +281,19 @@ app.delete("/:id", zValidator("param", deleteRecipeRequest), async (c) => {
 });
 
 app.put(
-	"/toggle-completion/:id",
-	zValidator("param", toggleCompletionRecipeRequest),
+	'/toggle-completion/:id',
+	zValidator('param', toggleCompletionRecipeRequest),
 	async (c) => {
-		const db = c.get("db");
-		const schema = c.get("schema");
-		const { id } = c.req.valid("param");
+		const db = c.get('db');
+		const schema = c.get('schema');
+		const { id } = c.req.valid('param');
 
 		const recipe = await db.query.recipe.findFirst({
 			where: (recipes, { eq }) => eq(recipes.id, Number(id)),
 		});
 
 		if (!recipe) {
-			return c.newResponse("Recipe not found", 404);
+			return c.newResponse('Recipe not found', 404);
 		}
 
 		await db

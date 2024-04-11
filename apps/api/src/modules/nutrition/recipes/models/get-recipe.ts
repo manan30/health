@@ -2,12 +2,12 @@ import type {
 	IngredientsSelectModel,
 	RecipeIngredientsSelectModel,
 	RecipesSelectModel,
-} from "db";
-import { BaseResponse } from "~/core/response";
+} from 'db';
+import { BaseResponse } from '~/core/response';
 
 enum ItemType {
-	Recipe = "recipe",
-	Ingredient = "ingredient",
+	Recipe = 'recipe',
+	Ingredient = 'ingredient',
 }
 
 type SerializedGetRecipeResponse = {

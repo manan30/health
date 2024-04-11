@@ -9,6 +9,13 @@
 			"recommended": true
 		}
 	},
+	"formatter": {},
+	"javascript": {
+		"formatter": {
+			"jsxQuoteStyle": "single",
+			"quoteStyle": "single"
+		}
+	},
 	"vcs": {
 		"defaultBranch": "main",
 		"enabled": true,

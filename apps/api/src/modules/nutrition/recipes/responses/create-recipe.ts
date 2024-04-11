@@ -1,5 +1,5 @@
-import { RecipesSelectModel } from "db";
-import { BaseResponse } from "~/core/response";
+import { RecipesSelectModel } from 'db';
+import { BaseResponse } from '~/core/response';
 
 type Recipe = { id: number };
 
