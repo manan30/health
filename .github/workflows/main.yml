@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - github-actions-update-II
+      - main
 
 concurrency: "only one deploy at a time"
 
