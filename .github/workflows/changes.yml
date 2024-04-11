@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - github-actions-update
+
+concurrency: "only one deploy at a time"
+
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+jobs:
+  changes:
+    name: Detect files changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      db: ${{ steps.filter.outputs.db }}
+      api: ${{ steps.filter.outputs.api }}
+      web-app: ${{ steps.filter.outputs.web-app }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v2.2.1
+        id: filter
+        with:
+          filters: |
+            db:
+              - 'packages/db/**'
+            api:
+              - 'apps/api/**'
+            web-app:
+              - 'apps/web-app/**'
