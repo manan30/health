@@ -21,7 +21,6 @@ app.notFound((c) => {
 
 app.onError((err, c) => {
 	console.error(`${err}`);
-	console.error('Hello');
 	return c.text('Internal Server Error', 500);
 });
 
