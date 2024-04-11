@@ -20,8 +20,8 @@ app.notFound((c) => {
 });
 
 app.onError((err, c) => {
-	console.error(`${err}`);
-	return c.text('Internal Server', 500);
+	console.log(`${err}`);
+	return c.text('Internal Server Error', 500);
 });
 
 showRoutes(app);
