@@ -7,8 +7,6 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
       - name: Setup Bun
         run:
           curl -fsSL https://bun.sh/install | bash
