@@ -10,12 +10,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Bun
-        run:
-          curl -fsSL https://bun.sh/install | bash
-      - name: Source Bun
-        run: |
-          source /home/runner/.bashrc
-          bun --help
+        uses: oven-sh/setup-bun@v1
       - name: Install Dependencies
         run: bun install
 
