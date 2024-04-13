@@ -12,6 +12,8 @@ jobs:
       - name: Setup Bun
         run:
           curl -fsSL https://bun.sh/install | bash
+      - name: Source Bun
+        run: source /home/runner/.bashrc
       - name: Install Dependencies
         run: bun install
 
