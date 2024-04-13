@@ -4,7 +4,7 @@ on:
   workflow_call
 
 jobs:
-  setup:
+  setup-bun:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -12,5 +12,12 @@ jobs:
       - name: Setup Bun
         run:
           curl -fsSL https://bun.sh/install | bash
+
+  install-dependencies:
+    runs-on: ubuntu-latest
+    needs: setup-bun
+    steps:
+      - name: Install Dependencies
+        run: bun install
 
 

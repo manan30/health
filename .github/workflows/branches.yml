@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  setup:
+  Setup:
     uses: ./.github/workflows/setup.yml
     # runs-on: ubuntu-latest
     # steps:
