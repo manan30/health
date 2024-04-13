@@ -10,12 +10,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  checks:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup
-        uses: ./.github/workflows/setup.yml
+  setup:
+    uses: ./.github/workflows/setup.yml
+    # runs-on: ubuntu-latest
+    # steps:
+
+    #   - name: Setup
+    #     uses: ./.github/workflows/setup.yml
 
 
