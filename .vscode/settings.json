@@ -1,24 +1,25 @@
 {
-  "eslint.workingDirectories": [
-    {
-      "mode": "auto"
-    }
-  ],
-  "cSpell.words": [
-    "calsvg",
-    "cmdk",
-    "corepack",
-    "Hono",
-    "hookform",
-    "isbot",
-    "lucide",
-    "neondatabase",
-    "nitropack",
-    "ofetch",
-    "Pipeable",
-    "Quickstart",
-    "Serv",
-    "Sonner",
-    "tanstack"
-  ]
+	"eslint.workingDirectories": [
+		{
+			"mode": "auto"
+		}
+	],
+	"cSpell.words": [
+		"calsvg",
+		"cmdk",
+		"corepack",
+		"Hono",
+		"hookform",
+		"isbot",
+		"lefthook",
+		"lucide",
+		"neondatabase",
+		"nitropack",
+		"ofetch",
+		"Pipeable",
+		"Quickstart",
+		"Serv",
+		"Sonner",
+		"tanstack"
+	]
 }

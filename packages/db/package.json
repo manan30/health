@@ -5,6 +5,8 @@
 	"main": "./src/index.ts",
 	"types": "./src/index.ts",
 	"scripts": {
+		"tooling:fix": "",
+		"tooling:check": "",
 		"db:push": "pnpm drizzle-kit push:pg",
 		"db:studio": "pnpm drizzle-kit studio",
 		"db:migrate": "pnpm dotenv -e .env drizzle-kit generate:pg && pnpm dotenv -e .env tsx src/migrate"

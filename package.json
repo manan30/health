@@ -1,6 +1,7 @@
 {
 	"name": "health",
 	"private": true,
+	"workspaces": ["packages/*", "apps/*"],
 	"scripts": {
 		"build:app": "turbo build --filter web-app",
 		"dev": "pnpm run \"/dev:/\"",
@@ -10,13 +11,6 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.6.4",
-		"@repo/eslint-config": "workspace:*",
-		"@repo/typescript-config": "workspace:*",
-		"lefthook": "^1.6.9",
-		"turbo": "latest"
-	},
-	"packageManager": "pnpm@8.9.0",
-	"engines": {
-		"node": ">=18"
+		"lefthook": "^1.6.9"
 	}
 }
