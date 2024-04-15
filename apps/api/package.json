@@ -1,6 +1,8 @@
 {
 	"name": "api",
 	"scripts": {
+		"tooling:fix": "biome check --apply --no-errors-on-unmatched --files-ignore-unknown=true .",
+		"tooling:ci": "biome ci .",
 		"dev": "wrangler dev src/index.ts",
 		"deploy": "wrangler deploy --minify src/index.ts"
 	},
