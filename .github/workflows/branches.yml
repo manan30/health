@@ -36,14 +36,19 @@ jobs:
               - 'apps/web-app/**'
 
   db:
-    name: DB CI
+    name: Run DB steps
     needs: changes
     runs-on: ubuntu-latest
     if: ${{ needs.changes.outputs.db == 'true' }}
+    defaults:
+      run:
+        working-directory: packages/db
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Run DB CI
-        run: echo "DB CI"
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+      - name: Lint and format checks
+        run: bun tooling:ci
 
 
