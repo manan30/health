@@ -10,19 +10,40 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  checks:
+  changes:
+    name: Detect files changes
     runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      db: ${{ steps.filter.outputs.db }}
+      api: ${{ steps.filter.outputs.api }}
+      web-app: ${{ steps.filter.outputs.web-app }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      # name: Setup
-      # uses: ./.github/workflows/setup.yml
+        uses: actions/checkout@v4
 
-    # uses: ./.github/workflows/setup.yml
-    # runs-on: ubuntu-latest
-    # steps:
+      - uses: dorny/paths-filter@v3.0.2
+        name: Running filter
+        id: filter
+        with:
+          base: ${{ github.ref }}
+          filters: |
+            db:
+              - 'packages/db/**'
+            api:
+              - 'apps/api/**'
+            web-app:
+              - 'apps/web-app/**'
 
-    #   - name: Setup
-    #     uses: ./.github/workflows/setup.yml
+  db:
+    name: DB CI
+    needs: changes
+    runs-on: ubuntu-latest
+    if: ${{ needs.changes.outputs.db == 'true' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run DB CI
+        run: echo "DB CI"
 
 
