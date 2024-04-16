@@ -1,0 +1,521 @@
+{
+	"id": "474033fe-0c47-4b0d-b09b-775e5b0b42e2",
+	"prevId": "00000000-0000-0000-0000-000000000000",
+	"version": "5",
+	"dialect": "pg",
+	"tables": {
+		"workout": {
+			"name": "workout",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"description": {
+					"name": "description",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"date": {
+					"name": "date",
+					"type": "timestamp(3)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp(3)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {}
+		},
+		"exercise": {
+			"name": "exercise",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"description": {
+					"name": "description",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"sets": {
+					"name": "sets",
+					"type": "text[]",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"date": {
+					"name": "date",
+					"type": "timestamp(3)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp(3)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				},
+				"workout_id": {
+					"name": "workout_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"exercise_type_id": {
+					"name": "exercise_type_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"exercise_workout_id_workout_id_fk": {
+					"name": "exercise_workout_id_workout_id_fk",
+					"tableFrom": "exercise",
+					"tableTo": "workout",
+					"columnsFrom": ["workout_id"],
+					"columnsTo": ["id"],
+					"onDelete": "set null",
+					"onUpdate": "cascade"
+				},
+				"exercise_exercise_type_id_exercise_type_id_fk": {
+					"name": "exercise_exercise_type_id_exercise_type_id_fk",
+					"tableFrom": "exercise",
+					"tableTo": "exercise_type",
+					"columnsFrom": ["exercise_type_id"],
+					"columnsTo": ["id"],
+					"onDelete": "set null",
+					"onUpdate": "cascade"
+				}
+			},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {}
+		},
+		"exercise_type": {
+			"name": "exercise_type",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"description": {
+					"name": "description",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp(3)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {}
+		},
+		"muscle_group": {
+			"name": "muscle_group",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"description": {
+					"name": "description",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp(3)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {}
+		},
+		"equipment": {
+			"name": "equipment",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"description": {
+					"name": "description",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp(3)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {}
+		},
+		"exercise_type_to_equipment": {
+			"name": "exercise_type_to_equipment",
+			"schema": "",
+			"columns": {
+				"exercise_type_id": {
+					"name": "exercise_type_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"equipment_id": {
+					"name": "equipment_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"exercise_type_to_equipment_exercise_type_id_exercise_type_id_fk": {
+					"name": "exercise_type_to_equipment_exercise_type_id_exercise_type_id_fk",
+					"tableFrom": "exercise_type_to_equipment",
+					"tableTo": "exercise_type",
+					"columnsFrom": ["exercise_type_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"exercise_type_to_equipment_equipment_id_equipment_id_fk": {
+					"name": "exercise_type_to_equipment_equipment_id_equipment_id_fk",
+					"tableFrom": "exercise_type_to_equipment",
+					"tableTo": "equipment",
+					"columnsFrom": ["equipment_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"exercise_type_to_equipment_exercise_type_id_equipment_id_pk": {
+					"name": "exercise_type_to_equipment_exercise_type_id_equipment_id_pk",
+					"columns": ["exercise_type_id", "equipment_id"]
+				}
+			},
+			"uniqueConstraints": {}
+		},
+		"exercise_type_to_muscle_group": {
+			"name": "exercise_type_to_muscle_group",
+			"schema": "",
+			"columns": {
+				"exercise_type_id": {
+					"name": "exercise_type_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"muscle_group_id": {
+					"name": "muscle_group_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {
+				"exercise_type_to_muscle_group_exercise_type_id_exercise_type_id_fk": {
+					"name": "exercise_type_to_muscle_group_exercise_type_id_exercise_type_id_fk",
+					"tableFrom": "exercise_type_to_muscle_group",
+					"tableTo": "exercise_type",
+					"columnsFrom": ["exercise_type_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				},
+				"exercise_type_to_muscle_group_muscle_group_id_muscle_group_id_fk": {
+					"name": "exercise_type_to_muscle_group_muscle_group_id_muscle_group_id_fk",
+					"tableFrom": "exercise_type_to_muscle_group",
+					"tableTo": "muscle_group",
+					"columnsFrom": ["muscle_group_id"],
+					"columnsTo": ["id"],
+					"onDelete": "no action",
+					"onUpdate": "no action"
+				}
+			},
+			"compositePrimaryKeys": {
+				"exercise_type_to_muscle_group_exercise_type_id_muscle_group_id_pk": {
+					"name": "exercise_type_to_muscle_group_exercise_type_id_muscle_group_id_pk",
+					"columns": ["exercise_type_id", "muscle_group_id"]
+				}
+			},
+			"uniqueConstraints": {}
+		},
+		"ingredient": {
+			"name": "ingredient",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"calories": {
+					"name": "calories",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"serving_size": {
+					"name": "serving_size",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"serving_unit": {
+					"name": "serving_unit",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"store": {
+					"name": "store",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"brand": {
+					"name": "brand",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"macros": {
+					"name": "macros",
+					"type": "jsonb",
+					"primaryKey": false,
+					"notNull": false,
+					"default": "'{}'::jsonb"
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp(3)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {}
+		},
+		"recipe": {
+			"name": "recipe",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"name": {
+					"name": "name",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"total_calories": {
+					"name": "total_calories",
+					"type": "numeric",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"total_weight": {
+					"name": "total_weight",
+					"type": "numeric",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"completed": {
+					"name": "completed",
+					"type": "boolean",
+					"primaryKey": false,
+					"notNull": true,
+					"default": false
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp(3)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {}
+		},
+		"recipe_ingredient": {
+			"name": "recipe_ingredient",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"recipe_id": {
+					"name": "recipe_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"ingredient_id": {
+					"name": "ingredient_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"recipe_as_ingredient_id": {
+					"name": "recipe_as_ingredient_id",
+					"type": "integer",
+					"primaryKey": false,
+					"notNull": false
+				},
+				"quantity": {
+					"name": "quantity",
+					"type": "numeric",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp(3)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {}
+		},
+		"meal": {
+			"name": "meal",
+			"schema": "",
+			"columns": {
+				"id": {
+					"name": "id",
+					"type": "serial",
+					"primaryKey": true,
+					"notNull": true
+				},
+				"date": {
+					"name": "date",
+					"type": "timestamp(3)",
+					"primaryKey": false,
+					"notNull": true
+				},
+				"created_at": {
+					"name": "created_at",
+					"type": "timestamp(3)",
+					"primaryKey": false,
+					"notNull": true,
+					"default": "now()"
+				}
+			},
+			"indexes": {},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {}
+		}
+	},
+	"enums": {},
+	"schemas": {},
+	"_meta": {
+		"columns": {},
+		"schemas": {},
+		"tables": {}
+	}
+}
