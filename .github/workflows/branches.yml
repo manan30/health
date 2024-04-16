@@ -53,4 +53,22 @@ jobs:
       - name: Lint and format checks
         run: bun tooling:ci
 
+  api:
+    name: Run API steps
+    needs: changes
+    runs-on: ubuntu-latest
+    if: ${{ needs.changes.outputs.api == 'true' }}
+    defaults:
+      run:
+        working-directory: apps/api
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install dependencies
+        run: bun install
+      - name: Lint and format checks
+        run: bun tooling:ci
+
 
