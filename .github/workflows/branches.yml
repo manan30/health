@@ -1,0 +1,56 @@
+name: Branches CI
+on:
+  push:
+    branches:
+      - "*"
+      - "!main"
+
+concurrency:
+  group: ${{github.workflow}}-${{github.ref}}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: Detect files changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      db: ${{ steps.filter.outputs.db }}
+      api: ${{ steps.filter.outputs.api }}
+      web-app: ${{ steps.filter.outputs.web-app }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3.0.2
+        name: Running filter
+        id: filter
+        with:
+          base: ${{ github.ref }}
+          filters: |
+            db:
+              - 'packages/db/**'
+            api:
+              - 'apps/api/**'
+            web-app:
+              - 'apps/web-app/**'
+
+  db:
+    name: Run DB steps
+    needs: changes
+    runs-on: ubuntu-latest
+    if: ${{ needs.changes.outputs.db == 'true' }}
+    defaults:
+      run:
+        working-directory: packages/db
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install dependencies
+        run: bun install
+      - name: Lint and format checks
+        run: bun tooling:ci
+
+
