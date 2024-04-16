@@ -8,23 +8,19 @@
 		"tooling:fix": "biome check --apply --no-errors-on-unmatched --files-ignore-unknown=true .",
 		"tooling:ci": "biome ci .",
 		"db:push": "drizzle-kit push:pg",
-		"db:studio": "drizzle-kit studio",
-		"db:migrate": "dotenv -e .env drizzle-kit generate:pg && pnpm dotenv -e .env tsx src/migrate"
+		"db:studio": "drizzle-kit studio"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
-		"@types/node": "^20.10.6",
 		"dotenv-cli": "^7.3.0",
-		"drizzle-kit": "^0.20.13",
-		"drizzle-orm": "^0.29.3",
-		"tsx": "^4.7.0",
+		"drizzle-kit": "^0.20.14",
+		"drizzle-orm": "^0.30.8",
 		"typescript": "^5.3.3"
 	},
 	"dependencies": {
-		"@neondatabase/serverless": "^0.7.2",
-		"pg": "^8.11.3",
-		"postgres": "^3.4.3"
+		"@neondatabase/serverless": "^0.9.1",
+		"pg": "^8.11.5"
 	}
 }
