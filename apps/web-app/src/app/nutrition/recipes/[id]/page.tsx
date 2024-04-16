@@ -1,20 +1,20 @@
-import { getRecipeById } from "~/lib/data-fetching/recipes";
-import { RecipeForm } from "./form";
-import { NEW_ROUTE } from "~/app/utils/constants";
+import { NEW_ROUTE } from '~/app/utils/constants';
+import { getRecipeById } from '~/lib/data-fetching/recipes';
+import { RecipeForm } from './form';
 
 export default async function RecipePage({
-  params,
+	params,
 }: {
-  params: { id: string };
+	params: { id: string };
 }) {
-  let recipe = null;
-  const isNew = params.id === NEW_ROUTE;
+	let recipe = null;
+	const isNew = params.id === NEW_ROUTE;
 
-  if (!isNew) {
-    recipe = await getRecipeById(Number(params.id));
-  }
+	if (!isNew) {
+		recipe = await getRecipeById(Number(params.id));
+	}
 
-  return <RecipeForm isNew={isNew} recipe={recipe ?? null} />;
+	return <RecipeForm isNew={isNew} recipe={recipe ?? null} />;
 }
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';

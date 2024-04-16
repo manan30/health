@@ -3,6 +3,8 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
+		"tooling:fix": "biome check --apply --no-errors-on-unmatched --files-ignore-unknown=true .",
+		"tooling:ci": "biome ci .",
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",

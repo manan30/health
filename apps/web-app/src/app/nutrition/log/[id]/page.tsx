@@ -1,11 +1,11 @@
-import { Chilanka } from "next/font/google";
-import React from "react";
-import { LogForm } from "./form";
+import { Chilanka } from 'next/font/google';
+import type React from 'react';
+import { LogForm } from './form';
 
 export default function LogEntryPage({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return <LogForm />;
+	return <LogForm />;
 }

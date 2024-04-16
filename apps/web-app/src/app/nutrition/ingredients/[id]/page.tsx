@@ -1,20 +1,20 @@
-import { getIngredient } from "~/lib/data-fetching/ingredients";
-import { IngredientForm } from "./form";
-import { NEW_ROUTE } from "~/app/utils/constants";
+import { NEW_ROUTE } from '~/app/utils/constants';
+import { getIngredient } from '~/lib/data-fetching/ingredients';
+import { IngredientForm } from './form';
 
 export default async function IngredientPage({
-  params,
+	params,
 }: {
-  params: { id: string };
+	params: { id: string };
 }) {
-  let ingredient = null;
-  const isNew = params.id === NEW_ROUTE;
+	let ingredient = null;
+	const isNew = params.id === NEW_ROUTE;
 
-  if (!isNew) {
-    ingredient = await getIngredient(Number(params.id));
-  }
+	if (!isNew) {
+		ingredient = await getIngredient(Number(params.id));
+	}
 
-  return <IngredientForm isNew={isNew} ingredient={ingredient} />;
+	return <IngredientForm isNew={isNew} ingredient={ingredient} />;
 }
 
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
