@@ -7,7 +7,7 @@ export * from 'drizzle-orm';
 export * from './types';
 export { schema };
 
-console.log({ schema });
+console.log({ schema, neon });
 
 export function setupDb(dbUrl: string) {
 	const sql = neon(process.env.DRIZZLE_DATABASE_URL ?? '');
