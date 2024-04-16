@@ -8,7 +8,9 @@
 		"tooling:fix": "biome check --apply --no-errors-on-unmatched --files-ignore-unknown=true .",
 		"tooling:ci": "biome ci .",
 		"db:push": "drizzle-kit push:pg",
-		"db:studio": "drizzle-kit studio"
+		"db:studio": "drizzle-kit studio",
+		"db:migrate": "bun src/migrate.ts",
+		"create-migrations": "drizzle-kit generate:pg"
 	},
 	"keywords": [],
 	"author": "",
