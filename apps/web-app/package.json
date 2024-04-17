@@ -6,9 +6,10 @@
 		"tooling:fix": "biome check --apply --no-errors-on-unmatched --files-ignore-unknown=true .",
 		"tooling:ci": "biome ci .",
 		"dev": "next dev",
-		"build": "next build",
+		"build": "bun run disable-telemetry && next build",
 		"start": "next start",
-		"lint": "next lint"
+		"lint": "next lint",
+		"disable-telemetry": "next telemetry disable"
 	},
 	"dependencies": {
 		"@headlessui/react": "^1.7.18",
