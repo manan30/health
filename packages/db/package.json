@@ -10,7 +10,7 @@
 		"db:push": "drizzle-kit push:pg",
 		"db:studio": "drizzle-kit studio",
 		"db:migrate": "bun src/migrate.ts",
-		"create-migrations": "drizzle-kit generate:pg"
+		"db:create-migrations": "drizzle-kit generate:pg"
 	},
 	"keywords": [],
 	"author": "",
