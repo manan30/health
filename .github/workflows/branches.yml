@@ -71,4 +71,22 @@ jobs:
       - name: Lint and format checks
         run: bun tooling:ci
 
+  web-app:
+    name: Run web app steps
+    needs: changes
+    runs-on: ubuntu-latest
+    if: ${{ needs.changes.outputs.web-app == 'true' }}
+    defaults:
+      run:
+        working-directory: apps/web-app
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+      - name: Install dependencies
+        run: bun install
+      - name: Lint and format checks
+        run: bun tooling:ci
+
 
