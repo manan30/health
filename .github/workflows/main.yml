@@ -81,7 +81,7 @@ jobs:
       - name: Lint and format checks
         run: bun tooling:ci
       - name: Deploy
-        run: wrangler deploy --minify src/index.ts --compatibility-date 2024-03-12 --name "health" --var DATABASE_URL:$DATABASE_URL
+        run: bunx wrangler deploy --minify src/index.ts --compatibility-date 2024-03-12 --name "health" --var DATABASE_URL:$DATABASE_URL
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
