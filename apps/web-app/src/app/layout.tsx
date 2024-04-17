@@ -26,6 +26,7 @@ export default function RootLayout({
 			>
 				<Breadcrumbs />
 				<main>{children}</main>
+				<div />
 				<Toaster />
 			</body>
 		</html>
