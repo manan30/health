@@ -1,1 +1,1 @@
-export const NEW_ROUTE = "new";
+export const NEW_ROUTE = 'new';

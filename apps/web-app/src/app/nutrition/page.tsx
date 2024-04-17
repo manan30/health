@@ -1,5 +1,5 @@
-import React from "react";
+import React from 'react';
 
 export default function NutritionPage() {
-  return <div className="p-6">Nutrition Page</div>;
+	return <div className='p-6'>Nutrition Page</div>;
 }

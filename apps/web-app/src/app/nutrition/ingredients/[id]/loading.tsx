@@ -1,3 +1,3 @@
 export default function IngredientPageLoading() {
-  return null;
+	return null;
 }
