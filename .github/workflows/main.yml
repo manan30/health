@@ -9,9 +9,6 @@ concurrency:
   group: ${{github.workflow}}-${{github.ref}}
   cancel-in-progress: true
 
-env:
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
-
 jobs:
   changes:
     name: Detect files changes
@@ -42,6 +39,9 @@ jobs:
     needs: changes
     runs-on: ubuntu-latest
     if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.db == 'true'}}
+    strategy:
+      matrix:
+        dirs: ['packages/db', 'apps/api']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -52,7 +52,8 @@ jobs:
           bun install
           bun i wrangler
       - name: Lint and format checks
-        run: bun tooling:ci
+        run: bun run tooling:ci
+        working-directory: ${{ matrix.dirs }}
       - name: Run migrations
         run: DATABASE_URL=$DATABASE_URL bun run db:migrate
         working-directory: packages/db
@@ -61,6 +62,8 @@ jobs:
         working-directory: apps/api
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
   # web-app:
   #   name: Run web app steps

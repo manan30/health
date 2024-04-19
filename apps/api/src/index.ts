@@ -20,7 +20,7 @@ app.notFound((c) => {
 });
 
 app.onError((err, c) => {
-	console.error(`ISE: ${err}`);
+	console.error(`${err}`);
 	return c.text('Internal Server Error', 500);
 });
 
