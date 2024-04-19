@@ -39,9 +39,6 @@ jobs:
     needs: changes
     runs-on: ubuntu-latest
     if: ${{ needs.changes.outputs.api == 'true' || needs.changes.outputs.db == 'true'}}
-    strategy:
-      matrix:
-        dirs: ['packages/db', 'apps/api']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -53,7 +50,6 @@ jobs:
           bun i wrangler
       - name: Lint and format checks
         run: bun run tooling:ci
-        working-directory: ${{ matrix.dirs }}
       - name: Run migrations
         run: DATABASE_URL=$DATABASE_URL bun run db:migrate
         working-directory: packages/db
